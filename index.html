@@ -1,0 +1,458 @@
+<!DOCTYPE html><html lang='en' class=''>
+<head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+<style class="cp-pen-styles">@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
+
+html
+body {
+	background: #cdd;
+	background: #355C7D;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(to right, #C06C84, #6C5B7B, #355C7D);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to right, #C06C84, #6C5B7B, #355C7D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	//background: -webkit-linear-gradient(to left, #4b134f, #c94b4b);  /* Chrome 10-25, Safari 5.1-6 */
+	//background: linear-gradient(to left, #4b134f, #c94b4b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	
+	background: #000046;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to right, #1CB5E0, #000046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	//background: #56CCF2;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to right, #2F80ED, #56CCF2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	font-family: Source Sans Pro;
+}
+	
+#unsorted-cards {
+	position: fixed;
+	float: left;
+	left: 0;
+	width: 200px;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: scroll;
+	background: #ffffff55;
+}
+
+#sorted-cards{
+	position: fixed;
+	display: flex;
+	width: calc(100% - 210px);
+	right: 0;
+	float: left;
+	height: 100vh;
+	overflow: scroll;
+}
+
+.CardList{
+	display: flex;
+    flex-direction: column;
+	margin-right: -12px;
+	overflow: scroll;
+	min-width: 50px;
+
+}
+
+.shortcutKey{	
+	padding-bottom: 6px;
+	padding-right: 0;
+	padding-top: 2px;
+	padding-left: 0px;
+	margin-left: -40px;
+	margin-bottom: 6px;
+	margin-right: 24px;
+	text-align: center; 
+	box-shadow: none;
+	visibility: visible;
+	color: white;
+}
+
+.Card {
+	list-style: none;
+	width: 100%;
+	max-width: 250px;
+	height: auto;
+	//max-height: 200px;
+	
+	padding: 6px;
+	padding-right: 0;
+	padding-top: 2px;
+	padding-left: 10px;
+	
+	margin: 0;
+	margin-left: -40px;
+	margin-bottom:8px;
+	
+	border-radius: 3px;
+	box-shadow: 0px 1px 2px #00000011;
+	color: gray;
+	background: #fcfcfc;
+	visibility: visible;
+    overflow: hidden;
+    overflow-y: scroll;
+	
+}
+
+.Card:hover{
+	color: black; 
+	box-shadow: 0px 1px 5px #00000055;
+	max-height: none;
+	background: white;
+	min-height: 100px;
+}
+
+#unsorted-cards .Card{
+	margin-left: -22px;
+	max-width: 150px;
+	max-height: 500px;
+}
+
+.Message{
+	line-height: 16px;
+	margin-top: 5px;
+	margin-right: 4px;
+	font-size: 14px;
+}
+
+.Date, .Url, .Source{
+	font-size: 11px;
+	width: auto;
+	margin-right: 5px;
+	float: left;
+	color: #aaa;
+}
+
+#sorted-cards .Date, #sorted-cards .Url, #sorted-cards .Source{
+	display: none;
+}
+
+#new-column{
+	padding-top: 20px;
+	width: 150px;
+	text-align: center; 
+}
+
+::-webkit-scrollbar {
+    display:none;
+}
+
+#getting-started {
+	font-size: 18px;
+	color: #ffffff88;
+	width: 100%;
+	text-align: center;
+	margin-top: 36vh;
+}
+
+#initial-input{
+	display: inline-block;
+	width: 250px;
+	margin: 0 auto;
+}
+
+button{
+	border:none;
+	position: relative; 
+	border-radius: 3px; 
+	width: 150px;
+	height: 35px;
+	font-size: 18px; 
+	margin: 12px;
+}
+@media print {
+	background: none;
+}
+@media print {
+
+    #unsorted-cards{
+        position: relative; 
+        left: 0px;
+		min-width: none;
+    }
+
+    #sorted-cards{ 
+        position: relative; 
+        display: inline-block;
+        max-width: 210mm;
+        break-after: always;
+        left: 10px;
+        overflow: visible !important;
+    }
+    
+	.Card {
+        position: relative;
+	    border: 1px solid black;
+        padding-bottom: 28px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    #unsorted-cards .Card{
+        page-break-inside: avoid; 
+        break-inside: avoid;
+    }
+
+    .CardList{
+        position: relative;
+        vertical-align: top;
+        display: inline-block;
+        overflow: visible; 
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    #sorted-cards .Date, #sorted-cards .Url, #sorted-cards .Source{
+	display: block;
+    line-height: 12px;
+    }
+
+    .shortcutKey{
+        display: inline-block;
+        color: black;
+    }
+}
+
+
+</style></head><body>
+
+
+<div id="unsorted-cards"></div>
+<div id="sorted-cards">
+	<div id="getting-started">
+		<div id = "initial-input">
+		<input id="upload-file" type="file"/>
+			<br>
+		<input type="radio" id="contactChoice2"
+		name="contact" value="phone">
+		<label for="contactChoice2">Hotjar</label>
+
+		<input type="radio" id="contactChoice3"
+		name="contact" value="mail">
+		<label for="contactChoice3">Freshdesk</label>
+			<br>
+		<button onclick="parseFile()">Upload</button>
+	</div>
+</div>
+</div>
+
+<script >/* Set up stacks */
+var Stack = function () {
+	this.size = 0;
+	this.storage = {};
+
+	this.push = function (data) {
+		this.storage[this.size] = data;
+		this.size++;
+	};
+
+	this.pop = function () {
+		if (this.size == 0) {
+			return -1;
+		}
+		this.size--;
+		var removed = this.storage[this.size];
+		delete this.storage[this.size];
+		return removed;
+	};
+};
+
+/*Make the Stack UI visible*/
+function drawStack(stack, sorted, stackNum) {
+	var cardList = document.createElement("ul");
+	cardList.className = "CardList";
+
+	/* Only add stack identifiers for sorted cards*/
+	if (sorted) {
+		document.getElementById("sorted-cards").appendChild(cardList);
+		var shortcutKeyBox = document.createElement("div");
+		shortcutKeyBox.className = "shortcutKey";
+		cardList.appendChild(shortcutKeyBox);
+		var letter = String.fromCharCode(65 + stackNum - 1);
+		shortcutKeyBox.innerHTML = letter + ": " + String(stack.size);
+	} else {
+		document.getElementById("unsorted-cards").appendChild(cardList);
+	}
+	/*Draw the cards in the stack*/
+	for (var x = 0; x < stack.size; x++) {
+		var cardBox = drawCard(stack.storage[stack.size - x - 1]);
+		cardList.ondragover = function(event){
+			this.style.background = "#ffffff33"; 
+		}
+
+		cardList.ondragleave = function(event){
+			this.style.background = "none"; 
+		}
+
+		cardList.ondrop = function(event){
+			event.preventDefault();
+			// get transferrable data that we set in the object in ondrag, which is set on the card
+			
+		}
+
+		cardList.append(cardBox);
+	}
+}
+
+/* Make a card */
+var card = function (message, date, source, url) {
+	this.message = message;
+	this.date = date;
+	this.source = source;
+	this.url = url;
+	// Set of words
+	// Important words
+};
+
+/*Make the card UI visble*/
+function drawCard(card) {
+	var cardBox = document.createElement("li");
+	var messageBox = document.createElement("div");
+	var dateBox = document.createElement("div");
+	var sourceBox = document.createElement("div");
+	var urlBox = document.createElement("div");
+
+	cardBox.className = "Card";
+	messageBox.className = "Message";
+	dateBox.className = "Date";
+	sourceBox.className = "Source";
+	urlBox.className = "Url";
+
+	messageBox.innerHTML = card.message;
+	dateBox.innerHTML = card.date;
+	sourceBox.innerHTML = card.source;
+	urlBox.innerHTML = card.url;
+
+	cardBox.appendChild(messageBox);
+	cardBox.appendChild(dateBox);
+	cardBox.appendChild(sourceBox);
+	cardBox.appendChild(urlBox);
+
+	cardBox.draggable = 'true';
+
+	return cardBox;
+
+}
+
+function redraw(unsortedStack, allStacks) {
+	document.getElementById("unsorted-cards").innerHTML = "";
+	document.getElementById("sorted-cards").innerHTML = "";
+	if (unsortedStack.size < 1 ){
+		document.getElementById("unsorted-cards").style.display = "none"; 
+		document.getElementById("sorted-cards").style.width = "calc(100% - 40px)"; 
+	}
+	drawStack(unsortedStack, false);
+
+	if (allStacks != undefined){
+		for (var x = 0; x < allStacks.size; x++) {
+		drawStack(allStacks.storage[x], true, x + 1);
+		}
+	}
+}
+
+/*Random message generator*/
+function makeRandomMessage() {
+	var messages = [
+	"This is an example of another, longer message",
+	"This is an example of a message",
+	"I didn't want to write more feedback sorry",
+	"Nope, didn't like it.",
+	"I'm writing an even longer piece of feedback, especially relevant for our verbose users. These users can write several sentences at one time.",
+	"Could use some blue someplace...",
+	"As someone who used your product from the very beginning, I was pleased to discover that you've had not more than just a small amount of luck.",
+	"Cats are fantastic!",
+	" i have no sense of pnctuatin or spellngi"];
+
+	var randomNumber = Math.floor(Math.random() * messages.length);
+	return messages[randomNumber];
+}
+
+function parseFile(){
+    console.log("parseFile started");
+
+	var unsortedStack = new Stack();
+	var sortedStack = new Stack();
+	var allStacks = new Stack();
+	var undoStack = new Stack();
+	var redoStack = new Stack(); 
+
+    var bigFile = document.getElementById("upload-file").files[0]; 
+	// We need to get the ID here of Hotjar, Freshdesk or Other
+	// REMOVE THIS LATER 
+	var whichSource = "hj"; 
+
+    Papa.parse(bigFile, {
+	header: true,
+	step: function(row) {
+		console.log("Row.Data", row.data);
+		if (whichSource != "hj"){
+			console.log("Source wasn't hotjar, we are confused.");
+		}
+        if (row.data[0]["Message"] != undefined && row.data[0]["Message"].length > 80){
+            var newcard = new card(
+            row.data[0]["Message"], //message field
+            row.data[0]["Date Submitted"], //time
+            "HotJar",
+            row.data[0]["Source URL"]//tag
+        );
+        unsortedStack.push(newcard);
+        }
+	},
+	complete: function() {
+		console.log("All done!");
+		redraw(unsortedStack);
+	}
+});
+
+	allStacks.push(sortedStack);
+	drawStack(unsortedStack, false);
+	drawStack(allStacks.storage[0], true, 1);
+	document.getElementsByClassName("shortcutKey")[0].style.visibility = "hidden";
+
+	document.addEventListener("keydown", function (event) {
+		var key = event.keyCode;
+		console.log("Key: ", key);
+		console.log(key);
+
+		//If we hit undo, send that item back to the unsorted coulmn 
+		if (event.ctrlKey && key == 90){
+			if (undoStack.size > 0){
+				var card = 0;
+				var originStack = 1;
+				console.log("Undo");
+				var item = undoStack.pop();
+				unsortedStack.push(item);
+			}
+		}
+		else if (key == 8){
+			console.log("Delete");
+			var deleted = unsortedStack.pop();
+			undoStack.push(deleted);
+		}
+		//If we have as many stacks as this letter refers to
+		else if (unsortedStack.size > 0) {
+			var letterKey = key - 65;
+			if (key >= 65 && key <= 90){
+				if (allStacks.size > letterKey) {
+				var tempCard = unsortedStack.pop();
+				allStacks.storage[letterKey].push(tempCard);
+				console.log("pushed to Stack" + String(letterKey + 1));
+			} else {
+				var stack = new Stack();
+				var tempCard = unsortedStack.pop();
+				stack.push(tempCard);
+				allStacks.push(stack);
+				}
+			}
+		}
+		console.log("unsortedstack size", unsortedStack.size);
+		redraw(unsortedStack, allStacks);
+	});
+
+}
+
+//# sourceURL=pen.js
+</script>
+</body></html>
