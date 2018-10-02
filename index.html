@@ -46,7 +46,7 @@ ul{
 #sorted-cards{
 	position: fixed;
 	display: flex;
-	width: calc(100% - 210px);
+	width: 100%;
 	right: 0;
 	float: left;
 	height: 100vh;
@@ -56,7 +56,7 @@ ul{
 .CardList{
 	display: flex;
     flex-direction: column;
-	//margin-right: -12px;
+	margin-top: 0;
 	overflow: scroll;
 	min-width: 50px;
 
@@ -64,6 +64,8 @@ ul{
 
 .shortcutKey{	
 	padding: 6px;
+	margin-top: 0px; 
+	padding-top: 3px;
 	margin-bottom: 6px;
 	text-align: center; 
 	box-shadow: none;
@@ -76,7 +78,7 @@ ul{
 	width: calc(100% - 24px - 6px);
 	max-width: 250px;
 	height: auto;
-	//max-height: 200px;
+	max-height: 200px;
 	
 	padding: 12px;
 	
@@ -97,7 +99,7 @@ ul{
 	box-shadow: 0px 1px 5px #00000055;
 	max-height: none;
 	background: white;
-	min-height: 100px;
+	min-height: auto;
 }
 
 #unsorted-cards .Card{
@@ -141,7 +143,7 @@ ul{
 	color: #ffffff88;
 	width: 100%;
 	text-align: center;
-	margin-top: 36vh;
+	margin-top: 30vh;
 }
 
 #initial-input{
@@ -150,15 +152,33 @@ ul{
 	margin: 0 auto;
 }
 
+#submit-file{
+	margin: 6px;
+	font-size: 18px;
+	padding: 6px;
+	width: 100%;
+}
+
+#add-more-files{
+	background: #56CCF2;
+	width: 100%;
+	position: absolute;
+	display: block;
+	bottom: 0;
+	left: 0; 
+	display: none; 
+}
+
 button{
 	border:none;
 	position: relative; 
 	border-radius: 3px; 
-	width: 150px;
-	height: 35px;
-	font-size: 18px; 
-	margin: 12px;
 }
+
+button:hover{
+	cursor: pointer; 
+}
+
 @media print {
 	background: none;
 }
@@ -212,7 +232,6 @@ button{
     }
 }
 
-
 </style></head><body>
 
 
@@ -220,11 +239,19 @@ button{
 <div id="sorted-cards">
 	<div id="getting-started">
 		<div id = "initial-input">
-		<input id="upload-file" type="file"/>
-		<br>
-		<button onclick="parseFile()">Upload</button>
+			<input id="upload-file" type="file"/>
+			<br>
+			<button id = "submit-file" onclick="parseFile()">Upload</button>
+		</div>
 	</div>
 </div>
+
+
+<div id="add-more-files">
+	<div id = "another-input">
+		<input id="upload-another-file" type="file"/>
+		<button id = "submit-another-file">Upload Another</button>
+	</div>
 </div>
 
 <script >/* Set up stacks */
@@ -269,6 +296,16 @@ function drawStack(stack, sorted, stackNum) {
 		var cardBox = drawCard(stack.storage[stack.size - x - 1]);
 		cardList.ondragover = function(event){
 			this.style.background = "#ffffff33"; 
+		}
+		if (x == 0){
+			if (sorted){
+
+			cardBox.style.background = "#ffff88";
+			cardBox.style.color = "#000";
+			} else {
+				cardBox.style.background = "#ffff00";
+				cardBox.style.color = "#000";
+			}
 		}
 
 		cardList.ondragleave = function(event){
@@ -334,11 +371,13 @@ function redraw(unsortedStack, allStacks) {
 	document.getElementById("sorted-cards").innerHTML = "";
 	if (unsortedStack.size < 1 ){
 		document.getElementById("unsorted-cards").style.display = "none"; 
-		document.getElementById("sorted-cards").style.width = "calc(100% - 6px)"; 
+		document.getElementById("sorted-cards").style.width = "calc(100% - 6px)";
+		document.getElementById("add-more-files").style.display = "none"; 
 	}
 	else {
 		document.getElementById("unsorted-cards").style.display = "block"; 
 		document.getElementById("sorted-cards").style.width = "calc(100% - 200px)"; 
+		document.getElementById("add-more-files").style.display = "block"; 
 	}
 	drawStack(unsortedStack, false);
 
@@ -373,23 +412,31 @@ function isMinimallyInteresting(str){
 	return true;
 }
 
+function trimMessage(str){
+	var newstr = str;
+	if (str.split("Sent from").length > 1){
+		newstr = str.split("Sent from")[0];
+	}
+	if (str.split("Hung from Smallpdf").length > 1){
+		newstr = str.split("Hung from Smallpdf")[0];
+	}
+	if (str.split("The information contained in").length > 1){
+		newstr = str.split("The information contained in")[0];
+	}
+	if (str.split("info@smallpdf.com").length > 1){
+		newstr = str.split("info@smallpdf.com")[0];
+	}
+	if (newstr != str){
+		console.log(str, newstr);
+		return newstr;
+	}
+	return str;
+}
 
-function parseFile(){
-    console.log("parseFile started");
-
-	var unsortedStack = new Stack();
-	var sortedStack = new Stack();
-	var allStacks = new Stack();
-	var undoStack = new Stack();
-	var redoStack = new Stack(); 
-	var count = 0;
-	var whichSource = "none";
-
-    var bigFile = document.getElementById("upload-file").files[0]; 
-	// We need to get the ID here of Hotjar, Freshdesk or Other
-	// REMOVE THIS LATER 
-
-    Papa.parse(bigFile, {
+function parseAnotherFile(file, unsortedStack, allStacks){ 
+	var count = 0; 
+	var whichSource = "none"; 
+	Papa.parse(file, {
 	header: true,
 	step: function(row) {
 		// First, let's figure out if this is HotJar	
@@ -426,7 +473,7 @@ function parseFile(){
 			console.log("This is a hotjar document");
 			if (row.data[0]["Message"] != undefined && isMinimallyInteresting(row.data[0]["Message"])){
 				var newcard = new card(
-				row.data[0]["Message"], //message field
+				trimMessage(row.data[0]["Message"]), //message field
 				row.data[0]["Date Submitted"], //time
 				"HotJar",
 				row.data[0]["Source URL"]//tag
@@ -438,7 +485,7 @@ function parseFile(){
 			console.log("This is a freshdesk document");
 			if (row.data[0]["Description"] != undefined && isMinimallyInteresting(row.data[0]["Description"])){
 				var newcard = new card(
-				row.data[0]["Description"], //message field
+				trimMessage(row.data[0]["Description"]), //message field
 				row.data[0]["Created Time"], //time
 				"FreshDesk",
 				row.data[0]["Tags"]//tag
@@ -452,11 +499,39 @@ function parseFile(){
 		redraw(unsortedStack);
 	}
 });
+return [unsortedStack, allStacks];
+}
+
+
+
+function parseFile(){
+    console.log("parseFile started");
+
+	var unsortedStack = new Stack();
+	var sortedStack = new Stack();
+	var allStacks = new Stack();
+	var undoStack = new Stack();
+	var redoStack = new Stack(); 
+
+    var bigFile = document.getElementById("upload-file").files[0]; 
+
+	var stacks = parseAnotherFile(bigFile, unsortedStack, allStacks);
+	unsortedStack = stacks[0];
+	allStacks = stacks[1];
+ 
 
 	allStacks.push(sortedStack);
 	drawStack(unsortedStack, false);
 	drawStack(allStacks.storage[0], true, 1);
 	document.getElementsByClassName("shortcutKey")[0].style.visibility = "hidden";
+
+	document.getElementById("submit-another-file").addEventListener("click", function(){
+
+    var anotherBigFile = document.getElementById("upload-another-file").files[0]; 
+    parseAnotherFile(anotherBigFile, unsortedStack, allStacks);
+	//Problem: this will not update the stacks... 
+});
+
 
 	document.addEventListener("keydown", function (event) {
 		var key = event.keyCode;
@@ -497,7 +572,7 @@ function parseFile(){
 		console.log("unsortedstack size", unsortedStack.size);
 		redraw(unsortedStack, allStacks);
 	});
-
+	console.log("We finished executing parseFile()");
 }
 
 //# sourceURL=pen.js
