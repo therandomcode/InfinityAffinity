@@ -24,6 +24,11 @@ body {
 
 	font-family: Source Sans Pro;
 }
+
+ul{
+	padding: 0;
+    list-style-type: none;
+}
 	
 #unsorted-cards {
 	position: fixed;
@@ -51,20 +56,15 @@ body {
 .CardList{
 	display: flex;
     flex-direction: column;
-	margin-right: -12px;
+	//margin-right: -12px;
 	overflow: scroll;
 	min-width: 50px;
 
 }
 
 .shortcutKey{	
-	padding-bottom: 6px;
-	padding-right: 0;
-	padding-top: 2px;
-	padding-left: 0px;
-	margin-left: -40px;
+	padding: 6px;
 	margin-bottom: 6px;
-	margin-right: 24px;
 	text-align: center; 
 	box-shadow: none;
 	visibility: visible;
@@ -73,19 +73,14 @@ body {
 
 .Card {
 	list-style: none;
-	width: 100%;
+	width: calc(100% - 24px - 6px);
 	max-width: 250px;
 	height: auto;
 	//max-height: 200px;
 	
-	padding: 6px;
-	padding-right: 0;
-	padding-top: 2px;
-	padding-left: 10px;
+	padding: 12px;
 	
-	margin: 0;
-	margin-left: -40px;
-	margin-bottom:8px;
+	margin: 3px;
 	
 	border-radius: 3px;
 	box-shadow: 0px 1px 2px #00000011;
@@ -106,9 +101,10 @@ body {
 }
 
 #unsorted-cards .Card{
-	margin-left: -22px;
-	max-width: 150px;
+	width: calc(100% - 24px - 6px); 
+	max-width: 200px;
 	max-height: 500px;
+	background: rgb(235, 237, 255);
 }
 
 .Message{
@@ -338,11 +334,11 @@ function redraw(unsortedStack, allStacks) {
 	document.getElementById("sorted-cards").innerHTML = "";
 	if (unsortedStack.size < 1 ){
 		document.getElementById("unsorted-cards").style.display = "none"; 
-		document.getElementById("sorted-cards").style.width = "calc(100% - 40px)"; 
+		document.getElementById("sorted-cards").style.width = "calc(100% - 6px)"; 
 	}
 	else {
 		document.getElementById("unsorted-cards").style.display = "block"; 
-		document.getElementById("sorted-cards").style.width = "calc(100% - 250px)"; 
+		document.getElementById("sorted-cards").style.width = "calc(100% - 200px)"; 
 	}
 	drawStack(unsortedStack, false);
 
