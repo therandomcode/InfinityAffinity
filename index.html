@@ -35,6 +35,7 @@ body {
 	height: 100%;
 	overflow: scroll;
 	background: #ffffff55;
+	display: none;
 }
 
 #sorted-cards{
@@ -339,6 +340,10 @@ function redraw(unsortedStack, allStacks) {
 		document.getElementById("unsorted-cards").style.display = "none"; 
 		document.getElementById("sorted-cards").style.width = "calc(100% - 40px)"; 
 	}
+	else {
+		document.getElementById("unsorted-cards").style.display = "block"; 
+		document.getElementById("sorted-cards").style.width = "calc(100% - 250px)"; 
+	}
 	drawStack(unsortedStack, false);
 
 	if (allStacks != undefined){
@@ -364,6 +369,14 @@ function makeRandomMessage() {
 	var randomNumber = Math.floor(Math.random() * messages.length);
 	return messages[randomNumber];
 }
+
+function isMinimallyInteresting(str){
+	if (str.split(" ").length < 5){
+		return false; 
+	}
+	return true;
+}
+
 
 function parseFile(){
     console.log("parseFile started");
@@ -396,7 +409,6 @@ function parseFile(){
 				&& 'Email' in row.data[0]
 				&& 'Message' in row.data[0])
 			{
-				console.log("These conditions returned true for hj");
 				whichSource = "hj";
 			}
 			/* If this is a FreshDesk .CSV */
@@ -407,7 +419,6 @@ function parseFile(){
 				&& 'Source' in row.data[0] 
 				&& 'Description' in row.data[0])
 			{
-				console.log("These conditions retuend true for fd");
 				whichSource = "fd";
 			}
 			else {
@@ -417,7 +428,7 @@ function parseFile(){
 		count++; 
 		if (whichSource == "hj"){
 			console.log("This is a hotjar document");
-			if (row.data[0]["Message"] != undefined && row.data[0]["Message"].length > 80){
+			if (row.data[0]["Message"] != undefined && isMinimallyInteresting(row.data[0]["Message"])){
 				var newcard = new card(
 				row.data[0]["Message"], //message field
 				row.data[0]["Date Submitted"], //time
@@ -429,7 +440,7 @@ function parseFile(){
 		}
         else if (whichSource == "fd"){
 			console.log("This is a freshdesk document");
-			if (row.data[0]["Description"] != undefined && row.data[0]["Description"].length > 80){
+			if (row.data[0]["Description"] != undefined && isMinimallyInteresting(row.data[0]["Description"])){
 				var newcard = new card(
 				row.data[0]["Description"], //message field
 				row.data[0]["Created Time"], //time
