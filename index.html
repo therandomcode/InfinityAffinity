@@ -224,15 +224,7 @@ button{
 	<div id="getting-started">
 		<div id = "initial-input">
 		<input id="upload-file" type="file"/>
-			<br>
-		<input type="radio" id="contactChoice2"
-		name="contact" value="phone">
-		<label for="contactChoice2">Hotjar</label>
-
-		<input type="radio" id="contactChoice3"
-		name="contact" value="mail">
-		<label for="contactChoice3">Freshdesk</label>
-			<br>
+		<br>
 		<button onclick="parseFile()">Upload</button>
 	</div>
 </div>
@@ -289,7 +281,7 @@ function drawStack(stack, sorted, stackNum) {
 		cardList.ondrop = function(event){
 			event.preventDefault();
 			// get transferrable data that we set in the object in ondrag, which is set on the card
-			
+			/*event.dataTransfer.getData("card");*/ 
 		}
 
 		cardList.append(cardBox);
@@ -331,6 +323,10 @@ function drawCard(card) {
 	cardBox.appendChild(urlBox);
 
 	cardBox.draggable = 'true';
+    /*
+    cardBox.ondragstart = function(){
+        event.dataTransfer.setData("card", originstack.storage.indexOf(card));
+    };*/
 
 	return cardBox;
 
@@ -377,28 +373,72 @@ function parseFile(){
 	var allStacks = new Stack();
 	var undoStack = new Stack();
 	var redoStack = new Stack(); 
+	var count = 0;
+	var whichSource = "none";
 
     var bigFile = document.getElementById("upload-file").files[0]; 
 	// We need to get the ID here of Hotjar, Freshdesk or Other
 	// REMOVE THIS LATER 
-	var whichSource = "hj"; 
 
     Papa.parse(bigFile, {
 	header: true,
 	step: function(row) {
-		console.log("Row.Data", row.data);
-		if (whichSource != "hj"){
-			console.log("Source wasn't hotjar, we are confused.");
+		// First, let's figure out if this is HotJar	
+		if (count == 0){
+
+			console.log("Here is the data we are looking at", row.data[0]);
+			/* If this is a HotJar .CSV */
+			if 
+				('Browser' in row.data[0] 
+				&& 'Country' in row.data[0] 
+				&& 'Date Submitted' in row.data[0]
+				&& 'Device' in row.data[0]
+				&& 'Email' in row.data[0]
+				&& 'Message' in row.data[0])
+			{
+				console.log("These conditions returned true for hj");
+				whichSource = "hj";
+			}
+			/* If this is a FreshDesk .CSV */
+			else if (
+				'Ticket Id' in row.data[0]
+				&& 'Subject' in row.data[0]
+				&& 'Created Time' in row.data[0] 
+				&& 'Source' in row.data[0] 
+				&& 'Description' in row.data[0])
+			{
+				console.log("These conditions retuend true for fd");
+				whichSource = "fd";
+			}
+			else {
+				console.log("This doesn't look like a CSV I know or understand yet");
+			}
 		}
-        if (row.data[0]["Message"] != undefined && row.data[0]["Message"].length > 80){
-            var newcard = new card(
-            row.data[0]["Message"], //message field
-            row.data[0]["Date Submitted"], //time
-            "HotJar",
-            row.data[0]["Source URL"]//tag
-        );
-        unsortedStack.push(newcard);
-        }
+		count++; 
+		if (whichSource == "hj"){
+			console.log("This is a hotjar document");
+			if (row.data[0]["Message"] != undefined && row.data[0]["Message"].length > 80){
+				var newcard = new card(
+				row.data[0]["Message"], //message field
+				row.data[0]["Date Submitted"], //time
+				"HotJar",
+				row.data[0]["Source URL"]//tag
+			);
+			unsortedStack.push(newcard);
+			}
+		}
+        else if (whichSource == "fd"){
+			console.log("This is a freshdesk document");
+			if (row.data[0]["Description"] != undefined && row.data[0]["Description"].length > 80){
+				var newcard = new card(
+				row.data[0]["Description"], //message field
+				row.data[0]["Created Time"], //time
+				"FreshDesk",
+				row.data[0]["Tags"]//tag
+			);
+			unsortedStack.push(newcard);
+			}
+		}
 	},
 	complete: function() {
 		console.log("All done!");
