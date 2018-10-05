@@ -1,4 +1,5 @@
 <!DOCTYPE html><html lang='en' class=''>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <head>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
@@ -138,9 +139,15 @@ ul{
     display:none;
 }
 
-#getting-started {
+h2{
 	font-size: 18px;
+	color: white; 
+}
+p{
 	color: #ffffff88;
+}
+
+#getting-started {
 	width: 100%;
 	text-align: center;
 	margin-top: 30vh;
@@ -238,6 +245,8 @@ button:hover{
 <div id="unsorted-cards"></div>
 <div id="sorted-cards">
 	<div id="getting-started">
+		<h2>Choose the .CSV file you want to sort through</h2>
+			<p>I know how to parse HotJar and FreshDesk files.</p>
 		<div id = "initial-input">
 			<input id="upload-file" type="file"/>
 			<br>
@@ -290,13 +299,26 @@ function drawStack(stack, sorted, stackNum) {
 		shortcutKeyBox.innerHTML = letter + ": " + String(stack.size);
 	} else {
 		document.getElementById("unsorted-cards").appendChild(cardList);
+		var shortcutKeyBox = document.createElement("div");
+		shortcutKeyBox.className = "shortcutKey";
+		cardList.appendChild(shortcutKeyBox);
+		shortcutKeyBox.innerHTML =  "Unsorted: " + String(stack.size);
 	}
 	/*Draw the cards in the stack*/
 	for (var x = 0; x < stack.size; x++) {
 		var cardBox = drawCard(stack.storage[stack.size - x - 1]);
+
 		cardList.ondragover = function(event){
 			this.style.background = "#ffffff33"; 
+			event.preventDefault();
 		}
+		cardBox.ondragstart = function(event, stack, x){
+			console.log("We started dragging");
+			// For some reason this is coming back undefined 
+			console.log("card: ", stack.storage[stack.size - x - 1]);
+			event.dataTransfer.setData("card", [stack.storage[stack.size - x - 1], stack]);
+		};
+
 		if (x == 0){
 			if (sorted){
 
@@ -307,15 +329,23 @@ function drawStack(stack, sorted, stackNum) {
 				cardBox.style.color = "#000";
 			}
 		}
+		cardList.ondrop = function(event){
+			console.log("We dropped something");
+			//event.preventDefault();
+			var data = event.dataTransfer.getData("card");
+			var thisCard = data[0];
+			var thisStack = data[1];
+			//console.log("We want to remove the card: ", card, "from this stack", thisStack, "to this stack", this);
+			moveCardToAnotherStack(card, thisStack, this); 
+		}
+
+		cardList.ondragenter = function(event){
+			console.log("We're over a droppable target");
+			this.style.background = "#ffffff33"; 
+		}
 
 		cardList.ondragleave = function(event){
 			this.style.background = "none"; 
-		}
-
-		cardList.ondrop = function(event){
-			event.preventDefault();
-			// get transferrable data that we set in the object in ondrag, which is set on the card
-			/*event.dataTransfer.getData("card");*/ 
 		}
 
 		cardList.append(cardBox);
@@ -357,14 +387,17 @@ function drawCard(card) {
 	cardBox.appendChild(urlBox);
 
 	cardBox.draggable = 'true';
-    /*
-    cardBox.ondragstart = function(){
-        event.dataTransfer.setData("card", originstack.storage.indexOf(card));
-    };*/
-
 	return cardBox;
 
 }
+
+function moveCardToAnotherStack(card, originStack, destinationStack){
+	console.log(card, originStack, destinationStack);
+	destinationStack.push(card);
+	var index = originStack.storage.indexOf(card);
+	originStack.storage.splice(index, 1);
+	originStack.size--; 
+} 
 
 function redraw(unsortedStack, allStacks) {
 	document.getElementById("unsorted-cards").innerHTML = "";
@@ -433,6 +466,10 @@ function trimMessage(str){
 	return str;
 }
 
+function deSmallpdf(str){
+	return str.replace('https://smallpdf.com/','');
+}
+
 function parseAnotherFile(file, unsortedStack, allStacks){ 
 	var count = 0; 
 	var whichSource = "none"; 
@@ -456,9 +493,9 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 			}
 			/* If this is a FreshDesk .CSV */
 			else if (
-				'Ticket Id' in row.data[0]
+				'Ticket ID' in row.data[0]
 				&& 'Subject' in row.data[0]
-				&& 'Created Time' in row.data[0] 
+				&& 'Created time' in row.data[0] 
 				&& 'Source' in row.data[0] 
 				&& 'Description' in row.data[0])
 			{
@@ -476,7 +513,7 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 				trimMessage(row.data[0]["Message"]), //message field
 				row.data[0]["Date Submitted"], //time
 				"HotJar",
-				row.data[0]["Source URL"]//tag
+				deSmallpdf(row.data[0]["Source URL"])//tag
 			);
 			unsortedStack.push(newcard);
 			}
