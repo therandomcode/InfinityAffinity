@@ -147,7 +147,7 @@ p{
 	color: #ffffff88;
 }
 
-#getting-started {
+#getting-started, #onboarding {
 	width: 100%;
 	text-align: center;
 	margin-top: 30vh;
@@ -321,7 +321,6 @@ function drawStack(stack, sorted, stackNum) {
 
 		if (x == 0){
 			if (sorted){
-
 			cardBox.style.minHeight = "75px"; 
 			cardBox.style.background = "#ffff88";
 			cardBox.style.color = "#000";
@@ -416,8 +415,11 @@ function redraw(unsortedStack, allStacks) {
 	drawStack(unsortedStack, false);
 
 	if (allStacks != undefined){
-		for (var x = 0; x < allStacks.size; x++) {
-		drawStack(allStacks.storage[x], true, x + 1);
+		console.log("allstacks size ", allStacks.size);
+		if (allStacks.size > 0){
+			for (var x = 0; x < allStacks.size; x++) {
+				drawStack(allStacks.storage[x], true, x + 1);
+			}
 		}
 	}
 }
@@ -546,7 +548,7 @@ function parseFile(){
     console.log("parseFile started");
 
 	var unsortedStack = new Stack();
-	var sortedStack = new Stack();
+	//var sortedStack = new Stack();
 	var allStacks = new Stack();
 	var undoStack = new Stack();
 	var redoStack = new Stack(); 
@@ -556,19 +558,22 @@ function parseFile(){
 	var stacks = parseAnotherFile(bigFile, unsortedStack, allStacks);
 	unsortedStack = stacks[0];
 	allStacks = stacks[1];
+	
  
-
-	allStacks.push(sortedStack);
+	//Is there a reason for pushing an empty stack? 
+	//allStacks.push(sortedStack);
 	drawStack(unsortedStack, false);
-	drawStack(allStacks.storage[0], true, 1);
+	//drawStack(allStacks.storage[0], true, 1);
+	if (allStacks.size == 0){
+		console.log("There are no stacks created yet");
+		document.getElementById("sorted-cards").append('<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>');
+	}
 	document.getElementsByClassName("shortcutKey")[0].style.visibility = "hidden";
 
-	document.getElementById("submit-another-file").addEventListener("click", function(){
-
-    var anotherBigFile = document.getElementById("upload-another-file").files[0]; 
-    parseAnotherFile(anotherBigFile, unsortedStack, allStacks);
-	//Problem: this will not update the stacks... 
-});
+	document.getElementById("submit-another-file").addEventListener("click", function(){//document.getElementById("sorted-cards")
+		var anotherBigFile = document.getElementById("upload-another-file").files[0]; 
+		parseAnotherFile(anotherBigFile, unsortedStack, allStacks);
+	});
 
 
 	document.addEventListener("keydown", function (event) {
