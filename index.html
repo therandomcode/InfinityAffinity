@@ -594,45 +594,47 @@ function parseFile(){
 		console.log("Key: ", key);
 		console.log(key);
 
-		//If we hit undo, send that item back to the unsorted coulmn 
-		if (event.ctrlKey && key == 90){
-			if (undoStack.size > 0){
-				var card = 0;
-				var originStack = 1;
-				console.log("Undo");
-				var item = undoStack.pop();
-				unsortedStack.push(item);
-			}
-		}
-		else if (key == 8){
-			console.log("Delete");
-			var deleted = unsortedStack.pop();
-			undoStack.push(deleted);
-		}
-		//If we have as many stacks as this letter refers to
-		else if (unsortedStack.size > 0) {
-			var letterKey = key - 65;
-			if (key >= 65 && key <= 90){
-				if (allStacks.size > letterKey) {
-				var tempCard = unsortedStack.pop();
-				allStacks.storage[letterKey].push(tempCard);
-				console.log("pushed to Stack" + String(letterKey + 1));
-			} else {
-				var stack = new Stack();
-				var tempCard = unsortedStack.pop();
-				stack.push(tempCard);
-				allStacks.push(stack);
+		if (key >= 65 && key <= 90){
+			//If we hit undo, send that item back to the unsorted coulmn 
+			if (event.ctrlKey && key == 90){
+				if (undoStack.size > 0){
+					var card = 0;
+					var originStack = 1;
+					console.log("Undo");
+					var item = undoStack.pop();
+					unsortedStack.push(item);
 				}
 			}
+			else if (key == 8){
+				console.log("Delete");
+				var deleted = unsortedStack.pop();
+				undoStack.push(deleted);
+			}
+			//If we have as many stacks as this letter refers to
+			else if (unsortedStack.size > 0) {
+				var letterKey = key - 65;
+				if (allStacks.size > letterKey) {
+					var tempCard = unsortedStack.pop();
+					allStacks.storage[letterKey].push(tempCard);
+					console.log("pushed to Stack" + String(letterKey + 1));
+				} else {
+					var stack = new Stack();
+					var tempCard = unsortedStack.pop();
+					stack.push(tempCard);
+					allStacks.push(stack);
+				}
+			}
+			// Note that these are only triggered after a keypress! 
+			redraw(unsortedStack, allStacks);
+			if (allStacks.size == 1){
+				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Press A again to put the next card in column A, or press B to move it into a new column</h2></div>';
+			}
+			else if (allStacks.size == 2){
+				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Looks like have this sorted out :) Happy sorting! </h2></div>';
+			}
 		}
-		// Note that these are only triggered after a keypress! 
-		redraw(unsortedStack, allStacks);
-		if (allStacks.size == 1){
-			document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Press A again to put the next card in column A, or press B to move it into a new column</h2></div>';
-		}
-		else if (allStacks.size == 2){
-			document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Looks like have this sorted out :) Happy sorting! </h2></div>';
-		}
+
+
 	});
 	console.log("We finished executing parseFile()");
 }
