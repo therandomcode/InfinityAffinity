@@ -153,6 +153,11 @@ p{
 	margin-top: 30vh;
 }
 
+.error{
+	color: pink; 
+	text-align: center; 
+}
+
 #initial-input{
 	display: inline-block;
 	width: 250px;
@@ -536,7 +541,16 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 	},
 	complete: function() {
 		console.log("All done!");
-		redraw(unsortedStack);
+		if (allStacks.size == 0){
+			if (whichSource == "none"){
+				document.getElementById("getting-started").innerHTML += '<div class="error">This doesnt look like a CSV I know or understand yet. Try again :( </div>';
+				return -1; 
+			} else {
+				redraw(unsortedStack);
+				console.log("Drawing onboarding instructions");
+				document.getElementById("sorted-cards").innerHTML = '<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>';
+			}
+		}
 	}
 });
 return [unsortedStack, allStacks];
@@ -548,7 +562,6 @@ function parseFile(){
     console.log("parseFile started");
 
 	var unsortedStack = new Stack();
-	//var sortedStack = new Stack();
 	var allStacks = new Stack();
 	var undoStack = new Stack();
 	var redoStack = new Stack(); 
@@ -556,21 +569,21 @@ function parseFile(){
     var bigFile = document.getElementById("upload-file").files[0]; 
 
 	var stacks = parseAnotherFile(bigFile, unsortedStack, allStacks);
+	if (stacks == -1){
+		return; 
+	}
 	unsortedStack = stacks[0];
 	allStacks = stacks[1];
 	
  
 	//Is there a reason for pushing an empty stack? 
 	//allStacks.push(sortedStack);
+
 	drawStack(unsortedStack, false);
-	//drawStack(allStacks.storage[0], true, 1);
-	if (allStacks.size == 0){
-		console.log("There are no stacks created yet");
-		document.getElementById("sorted-cards").append('<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>');
-	}
+	console.log("drawStack was called 1");
 	document.getElementsByClassName("shortcutKey")[0].style.visibility = "hidden";
 
-	document.getElementById("submit-another-file").addEventListener("click", function(){//document.getElementById("sorted-cards")
+	document.getElementById("submit-another-file").addEventListener("click", function(){
 		var anotherBigFile = document.getElementById("upload-another-file").files[0]; 
 		parseAnotherFile(anotherBigFile, unsortedStack, allStacks);
 	});
@@ -612,8 +625,14 @@ function parseFile(){
 				}
 			}
 		}
-		console.log("unsortedstack size", unsortedStack.size);
+		// Note that these are only triggered after a keypress! 
 		redraw(unsortedStack, allStacks);
+		if (allStacks.size == 1){
+			document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Press A again to put the next card in column A, or press B to move it into a new column</h2></div>';
+		}
+		else if (allStacks.size == 2){
+			document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Looks like have this sorted out :) Happy sorting! </h2></div>';
+		}
 	});
 	console.log("We finished executing parseFile()");
 }
