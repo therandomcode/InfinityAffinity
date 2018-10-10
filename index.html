@@ -24,6 +24,7 @@ body {
 	background: linear-gradient(to right, #2F80ED, #56CCF2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 	font-family: Source Sans Pro;
+	margin-top: 0px; 
 }
 
 ul{
@@ -66,7 +67,7 @@ ul{
 .shortcutKey{	
 	padding: 6px;
 	margin-top: 0px; 
-	padding-top: 3px;
+	padding-top: 6px;
 	margin-bottom: 6px;
 	text-align: center; 
 	box-shadow: none;
@@ -129,11 +130,6 @@ ul{
 	display: none;
 }
 
-#new-column{
-	padding-top: 20px;
-	width: 150px;
-	text-align: center; 
-}
 
 ::-webkit-scrollbar {
     display:none;
@@ -198,7 +194,9 @@ button:hover{
 
     #unsorted-cards{
         position: relative; 
-        left: 0px;
+		left: 0px;
+		top: 0;
+		bottom: 0; 
 		min-width: none;
     }
 
@@ -627,7 +625,7 @@ function parseFile(){
 			// Note that these are only triggered after a keypress! 
 			redraw(unsortedStack, allStacks);
 			if (allStacks.size == 1){
-				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Press A again to put the next card in column A, or press B to move it into a new column</h2></div>';
+				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Press A again to put the next card in column A <br> Press B to move it into a new column</h2></div>';
 			}
 			else if (allStacks.size == 2){
 				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Looks like have this sorted out :) Happy sorting! </h2></div>';
