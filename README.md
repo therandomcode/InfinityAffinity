@@ -6,3 +6,5 @@ This webapp aims to handle
 - Importing any .CSV file with a header 
 - Fitting most cards on the screen
 - Printing in a somewhat coherent manner
+
+Not very usable yet. 
