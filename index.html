@@ -3,6 +3,9 @@
 <head>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+<script src="moment.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src = "jquery.sparkline.js"></script>
 <style class="cp-pen-styles">@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
 
 html
@@ -31,7 +34,8 @@ ul{
 	padding: 0;
     list-style-type: none;
 }
-	
+
+
 #unsorted-cards {
 	position: fixed;
 	float: left;
@@ -73,6 +77,24 @@ ul{
 	box-shadow: none;
 	visibility: visible;
 	color: white;
+}
+
+.Graph{
+	list-style: none; 
+	list-style: none;
+	width: calc(100% - 6px);
+	max-width: 250px;
+	height: auto;
+	min-height: 20px; 
+	align-content: center; 
+	
+	//padding: 12px;
+	margin: 3px;
+	
+	border-radius: 3px;
+	background: purple; 
+	color: green;
+	overflow-y: hidden; 
 }
 
 .Card {
@@ -140,7 +162,8 @@ h2{
 	color: white; 
 }
 p{
-	color: #ffffff88;
+	//color: #ffffff88;
+	color: black; 
 }
 
 #getting-started, #onboarding {
@@ -215,7 +238,7 @@ button:hover{
         padding-bottom: 28px;
         page-break-inside: avoid;
         break-inside: avoid;
-    }
+	}
 
     #unsorted-cards .Card{
         page-break-inside: avoid; 
@@ -245,6 +268,7 @@ button:hover{
 </style></head><body>
 
 
+</div>
 <div id="unsorted-cards"></div>
 <div id="sorted-cards">
 	<div id="getting-started">
@@ -266,7 +290,7 @@ button:hover{
 	</div>
 </div>
 
-<script >/* Set up stacks */
+<script>/* Set up stacks */
 var Stack = function () {
 	this.size = 0;
 	this.storage = {};
@@ -287,8 +311,99 @@ var Stack = function () {
 	};
 };
 
+function isInArray(array, value) {
+	return !!array.find(item => {return item.getTime() == value.getTime()});
+
+}
+
+function findArrayIndex(array, value){
+	for (x = 0; x < array.length; x++){
+		if (array[x].valueOf() == value.valueOf()){
+			return x;
+		}
+	}
+	return -1; 
+}
+/*
+function makeGraphData(stack){
+	console.log(stack);
+	var data = []; 
+	var dates = [];
+	var counts = []; 
+	for (var x = 0; x < stack.size; x++){*/
+		//********** format:{ x: new Date(2012, 0, 01), y: 0} ************//
+		/*
+		var card = stack.storage[stack.size - x - 1];
+		var longdate = moment(card.date).toDate();
+		thisdate = new Date (longdate.getYear(), longdate.getMonth(), longdate.getDay());
+		console.log("thisdate: ", thisdate);
+
+		if (isInArray(dates, thisdate)){
+			console.log("isInArray: ", isInArray(dates, thisdate));
+			console.log("index of this date: ", findArrayIndex(dates, thisdate));
+			counts[findArrayIndex(dates, thisdate)]++; 
+			console.log("We already have an entry for this date, upping the count.");
+		}
+		else { 
+			dates.push(thisdate);
+			counts.push(1);
+			console.log("We don't have an entry for this date");
+		}
+	}	
+	console.log("dates.length: ", dates.length);
+	for (var i = 0; i < dates.length; i++)  {
+		data.push({x: dates[i], y: counts[i]});
+	}
+	console.log(data);
+	return data; 
+}*/
+
+function makeBucketedGraphData(stack){
+	var buckets = [];
+
+	for (var y = 0; y < 52; y++){
+		buckets[y] = 0; 
+	}
+
+	for (var x = 0; x < stack.size; x++){
+		var card = stack.storage[stack.size - x - 1];
+		var longdate = moment(card.date).toDate();
+		var start = new Date(longdate.getFullYear(), 0, 0);
+		var diff = (longdate - start) + ((start.getTimezoneOffset() - longdate.getTimezoneOffset()) * 60 * 1000);
+		var oneDay = 1000 * 60 * 60 * 24;
+		var day = Math.floor(diff / oneDay);
+		console.log('Day of year: ' + day);
+		var bucket = Math.floor(day/7);
+		buckets[bucket] = buckets[bucket]+1;
+	}
+	return buckets;
+}
+
+function drawGraph(stack, cardList, stackNum){
+	console.log("OK we're gonna try to draw a graph...");
+	var boxid = "graphbox" + stackNum.toString();
+	if (document.contains(document.getElementById(boxid))){
+		console.log("already exists");
+	} else {
+		var graphBox = document.createElement("div");
+		graphBox.className = "Graph"; 
+		graphBox.id = boxid; 
+		cardList.appendChild(graphBox);
+	}
+
+var bucketedData = makeBucketedGraphData(stack);
+console.log(bucketedData); 
+$("#"+ boxid).sparkline(bucketedData, {
+    type: 'line'});
+
+document.getElementById(boxid).style.width = "100%"; 
+document.getElementById(boxid).style.height = "20px"; 
+document.getElementById(boxid).style.backgroundColor = "transparent"; 
+document.getElementById(boxid).style.borderRadius = "3px"; 
+}
+
 /*Make the Stack UI visible*/
-function drawStack(stack, sorted, stackNum) {
+function drawStack(stack, sorted, stackNum, showGraph) {
 	var cardList = document.createElement("ul");
 	cardList.className = "CardList";
 
@@ -307,6 +422,7 @@ function drawStack(stack, sorted, stackNum) {
 		cardList.appendChild(shortcutKeyBox);
 		shortcutKeyBox.innerHTML =  "Unsorted: " + String(stack.size);
 	}
+
 	/*Draw the cards in the stack*/
 	for (var x = 0; x < stack.size; x++) {
 		var cardBox = drawCard(stack.storage[stack.size - x - 1]);
@@ -352,6 +468,10 @@ function drawStack(stack, sorted, stackNum) {
 		}
 
 		cardList.append(cardBox);
+
+		if (showGraph){
+			drawGraph(stack, cardList, stackNum);
+		}
 	}
 }
 
@@ -421,7 +541,7 @@ function redraw(unsortedStack, allStacks) {
 		console.log("allstacks size ", allStacks.size);
 		if (allStacks.size > 0){
 			for (var x = 0; x < allStacks.size; x++) {
-				drawStack(allStacks.storage[x], true, x + 1);
+				drawStack(allStacks.storage[x], true, x + 1, true);
 			}
 		}
 	}
@@ -478,6 +598,7 @@ function deSmallpdf(str){
 
 function parseAnotherFile(file, unsortedStack, allStacks){ 
 	var count = 0; 
+	var freeFormHeaders = []; 
 	var whichSource = "none"; 
 	Papa.parse(file, {
 	header: true,
@@ -507,6 +628,25 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 			{
 				whichSource = "fd";
 			}
+			/*If this is a Typeform .CSV */
+			else if (
+				'Start Date (UTC)' in row.data[0]
+				&& 'Submit Date (UTC)' in row.data[0]
+				&& 'Network ID' in row.data[0])
+			{
+				//whichSource = "tf";
+				console.log("This is a typeform .CSV!");
+				for (x in row.data[0]){
+					if (x != 'Start Date (UTC)'
+					&& x != 'Submit Date (UTC)'
+					&& x != '#'
+					&& x != 'Network ID'){
+						console.log(x);
+						freeFormHeaders.push(x);
+					}
+				}
+				// Here we need to create a modal and pause other processing until the user has made a selection 
+			}
 			else {
 				console.log("This doesn't look like a CSV I know or understand yet");
 			}
@@ -529,12 +669,16 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 			if (row.data[0]["Description"] != undefined && isMinimallyInteresting(row.data[0]["Description"])){
 				var newcard = new card(
 				trimMessage(row.data[0]["Description"]), //message field
-				row.data[0]["Created Time"], //time
+				row.data[0]["Created time"], //time
 				"FreshDesk",
 				row.data[0]["Tags"]//tag
 			);
 			unsortedStack.push(newcard);
 			}
+		}
+		else if (whichSource == "tf"){
+			console.log("This is a typeform document & we're gonna need to do some extra processing");
+
 		}
 	},
 	complete: function() {
@@ -585,6 +729,7 @@ function parseFile(){
 		var anotherBigFile = document.getElementById("upload-another-file").files[0]; 
 		parseAnotherFile(anotherBigFile, unsortedStack, allStacks);
 	});
+
 
 
 	document.addEventListener("keydown", function (event) {
