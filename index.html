@@ -153,6 +153,48 @@ ul{
 }
 
 
+/* Modal Content */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	color: black;
+}
+
+.modal-content {
+	max-width: 500px;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 ::-webkit-scrollbar {
     display:none;
 }
@@ -270,6 +312,20 @@ button:hover{
 
 </div>
 <div id="unsorted-cards"></div>
+<!-- Modal content -->
+<div id="typeFormModal" class="modal">
+<div class="modal-content" id = "modalContent">
+  <span class="close">&times;</span>
+  <p>Unfortunately we can only sort one column of a table at a time. <br>
+  Which column would you like to sort by? </p><br>
+
+  <select id='selectForm' name="selectform_0">
+	</select>
+	<button id = "selectOptionButton" type="submit">Choose this field</button>
+</div>
+
+
+</div>
 <div id="sorted-cards">
 	<div id="getting-started">
 		<h2>Choose the .CSV file you want to sort through</h2>
@@ -313,7 +369,6 @@ var Stack = function () {
 
 function isInArray(array, value) {
 	return !!array.find(item => {return item.getTime() == value.getTime()});
-
 }
 
 function findArrayIndex(array, value){
@@ -324,39 +379,6 @@ function findArrayIndex(array, value){
 	}
 	return -1; 
 }
-/*
-function makeGraphData(stack){
-	console.log(stack);
-	var data = []; 
-	var dates = [];
-	var counts = []; 
-	for (var x = 0; x < stack.size; x++){*/
-		//********** format:{ x: new Date(2012, 0, 01), y: 0} ************//
-		/*
-		var card = stack.storage[stack.size - x - 1];
-		var longdate = moment(card.date).toDate();
-		thisdate = new Date (longdate.getYear(), longdate.getMonth(), longdate.getDay());
-		console.log("thisdate: ", thisdate);
-
-		if (isInArray(dates, thisdate)){
-			console.log("isInArray: ", isInArray(dates, thisdate));
-			console.log("index of this date: ", findArrayIndex(dates, thisdate));
-			counts[findArrayIndex(dates, thisdate)]++; 
-			console.log("We already have an entry for this date, upping the count.");
-		}
-		else { 
-			dates.push(thisdate);
-			counts.push(1);
-			console.log("We don't have an entry for this date");
-		}
-	}	
-	console.log("dates.length: ", dates.length);
-	for (var i = 0; i < dates.length; i++)  {
-		data.push({x: dates[i], y: counts[i]});
-	}
-	console.log(data);
-	return data; 
-}*/
 
 function makeBucketedGraphData(stack){
 	var buckets = [];
@@ -468,7 +490,7 @@ function drawStack(stack, sorted, stackNum, showGraph) {
 		}
 
 		cardList.append(cardBox);
-
+		var showGraph = false; 
 		if (showGraph){
 			drawGraph(stack, cardList, stackNum);
 		}
@@ -612,11 +634,16 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 				('Browser' in row.data[0] 
 				&& 'Country' in row.data[0] 
 				&& 'Date Submitted' in row.data[0]
-				&& 'Device' in row.data[0]
-				&& 'Email' in row.data[0]
-				&& 'Message' in row.data[0])
+				&& 'Device' in row.data[0])
 			{
-				whichSource = "hj";
+				if ('Message' in row.data[0]
+				&& 'Email' in row.data[0]){
+					whichSource = "hj";
+				} else {
+					whichSource = "hj-poll";
+					makeModalOptions(row.data[0]);
+					//document.getElementById("typeFormModal").style.display = "block";
+				}
 			}
 			/* If this is a FreshDesk .CSV */
 			else if (
@@ -663,6 +690,19 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 			);
 			unsortedStack.push(newcard);
 			}
+		} else if (whichSource == "hj-poll"){
+			var selectedField = document.getElementById("selectOptionButton").value;
+			console.log("selectedField: ", selectedField);
+			//console.log("This is a hotjar document");
+			if (row.data[0][selectedField] != undefined && isMinimallyInteresting(row.data[0][selectedField])){
+				var newcard = new card(
+				trimMessage(row.data[0][selectedField]), //message field
+				row.data[0]["Date Submitted"], //time
+				"HotJar",
+				deSmallpdf(row.data[0]["Source URL"])//tag
+			);
+			unsortedStack.push(newcard);
+			}
 		}
         else if (whichSource == "fd"){
 			console.log("This is a freshdesk document");
@@ -690,7 +730,7 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 			} else {
 				redraw(unsortedStack);
 				console.log("Drawing onboarding instructions");
-				document.getElementById("sorted-cards").innerHTML = '<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>';
+				document.getElementById("sorted->1").innerHTML = '<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>';
 			}
 		}
 	}
@@ -698,6 +738,21 @@ function parseAnotherFile(file, unsortedStack, allStacks){
 return [unsortedStack, allStacks];
 }
 
+function makeModalOptions(headers){
+	// we still need to create the parent element sompelace
+	var defaults = ["Number", "User", "Date Submitted", "Country", "Source URL", "Device", "Browser", "OS"];
+	for (header in headers){
+		if (defaults.includes(header)){
+		} else {
+			console.log("header: ", header);
+			var option = document.createElement("OPTION");
+			option.text = header; 
+			option.value = header; 
+			document.getElementById("selectForm").add(option);
+			document.getElementById("selectOptionButton").value = header; 
+		}
+	}
+}
 
 
 function parseFile(){
@@ -716,13 +771,8 @@ function parseFile(){
 	}
 	unsortedStack = stacks[0];
 	allStacks = stacks[1];
-	
- 
-	//Is there a reason for pushing an empty stack? 
-	//allStacks.push(sortedStack);
 
 	drawStack(unsortedStack, false);
-	console.log("drawStack was called 1");
 	document.getElementsByClassName("shortcutKey")[0].style.visibility = "hidden";
 
 	document.getElementById("submit-another-file").addEventListener("click", function(){
@@ -730,7 +780,35 @@ function parseFile(){
 		parseAnotherFile(anotherBigFile, unsortedStack, allStacks);
 	});
 
+	var modal = document.getElementById("typeFormModal");
+	console.log("modal: ", modal);
 
+	// Get the <span> element that closes the modal
+	var close = document.getElementsByClassName("close")[0];
+
+	// When the user clicks on <span> (x), close the modal
+		close.onclick = function() {
+			console.log("Trying to close");
+			modal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+
+	document.getElementById("selectForm").onchange = function(){
+        alert(this.value);
+		document.getElementById("selectOptionButton").value = this.value; 
+		console.log("first value: ", this.value);
+		console.log("second value: ", document.getElementById("selectOptionButton").value);
+    }
+
+	document.getElementById("selectOptionButton").onclick = function(){
+			modal.style.display = "none";
+	}
 
 	document.addEventListener("keydown", function (event) {
 		var key = event.keyCode;
@@ -767,12 +845,15 @@ function parseFile(){
 					allStacks.push(stack);
 				}
 			}
+
 			// Note that these are only triggered after a keypress! 
 			redraw(unsortedStack, allStacks);
-			if (allStacks.size == 1){
+			console.log("initial: "+ unsortedSize); 
+			console.log("current: "+ unsortedStack.size);
+			if (unsortedStack.size == unsortedSize - 1){
 				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Press A again to put the next card in column A <br> Press B to move it into a new column</h2></div>';
 			}
-			else if (allStacks.size == 2){
+			else if (unsortedStack.size == unsortedSize - 2 ){
 				document.getElementById("sorted-cards").innerHTML += '<div id="onboarding"><h2>Looks like have this sorted out :) Happy sorting! </h2></div>';
 			}
 		}
