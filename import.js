@@ -1,49 +1,5 @@
-<!DOCTYPE html><html lang='en' class=''>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<head>
-	<!--Let's import all the libraries we need -->
-	<link rel = "stylesheet" type = "text/css" href = "style.css" />
-	<script type='text/javascript' src="import.js"></script>
-	<script type='text/javascript' src="view-handler.js"></script>
-	<script type='text/javascript' src="process-text.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
-</head>
 
-<body>
-	<div id="getting-started">
-		<h2>Choose the .CSV file you want to sort through</h2>
-			<p>I know how to parse HotJar and FreshDesk files.</p>
-		<div id = "initial-input">
-			<input id="upload-file" type="file"/>
-			<br>
-			<button id = "submit-file" onclick="init()">Upload</button>
-		</div>
-	</div>
-
-<!--<div id="add-more-files">
-	<div id = "another-input">
-		<input id="upload-another-file" type="file"/>
-		<button id = "submit-another-file">Upload Another</button>
-	</div>
-</div>--> 
-
-<script> 
-buckets = [];
-currentModel = []; 
-
-function init(){
-    console.log("parseFile started");
-    var bigFile = document.getElementById("upload-file").files[0]; 
-
-	var stacks = parseFile(bigFile, buckets);
-	if (stacks == -1){
-		return; 
-	}
-	console.log("We finished executing parseFile()");
-}
-
-function parseFile(file, buckets){ 
-	buckets[0] = []; 
+function parseFile(file, unsortedStack, sortedStacks){ 
 	var count = 0; 
 	var whichSource = "none"; 
 	Papa.parse(file, {
@@ -85,9 +41,10 @@ function parseFile(file, buckets){
 				trimMessage(row.data[0]["Message"]), //message field
 				row.data[0]["Date Submitted"], //time
 				"HotJar",
-				deSmallpdf(row.data[0]["Source URL"])//tag
+                deSmallpdf(row.data[0]["Source URL"]),//tag
+                count // we'll use this as the ID for now. Probably should add something later. 
 			);
-			buckets[0].push(newcard);
+			unsortedStack.push(newcard);
 			}
 		}
         else if (whichSource == "fd"){
@@ -97,32 +54,26 @@ function parseFile(file, buckets){
 				trimMessage(row.data[0]["Description"]), //message field
 				row.data[0]["Created Time"], //time
 				"FreshDesk",
-				row.data[0]["Tags"]//tag
+                row.data[0]["Tags"],//tag
+                count
 			);
-			buckets[0].push(newcard);
+			unsortedStack.push(newcard);
 			}
 		}
 	},
 	complete: function() {
 		console.log("All done!");
-				drawSortingScreen(); 
-		if (buckets.size == 0){
+		if (sortedStacks.size == 0){
 			if (whichSource == "none"){
 				document.getElementById("getting-started").innerHTML += '<div class="error">This doesnt look like a CSV I know or understand yet. Try again :( </div>';
 				return -1; 
 			} else {
-				//draw onboarding instructions
+				redraw(unsortedStack);
+				console.log("Drawing onboarding instructions");
+				document.getElementById("sorted-cards").innerHTML = '<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>';
 			}
 		}
 	}
 });
-return buckets[0];
+return unsortedStack;
 }
-
-function showBuckets(){
-	console.log(buckets); 
-}
-
-</script>
-</body>
-</html>

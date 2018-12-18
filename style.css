@@ -1,0 +1,195 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
+
+html
+body {
+	background: #56CCF2;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(to right, #2F80ED, #56CCF2);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to right, #2F80ED, #56CCF2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	font-family: Source Sans Pro;
+	margin-top: 0px; 
+}
+
+.shortcutKey{	
+	padding: 6px;
+	margin-top: 0px; 
+	padding-top: 6px;
+	margin-bottom: 6px;
+	text-align: center; 
+	box-shadow: none;
+	visibility: visible;
+	color: white;
+}
+
+::-webkit-scrollbar {
+    display:none;
+}
+
+h2{
+	font-size: 18px;
+	color: white; 
+}
+p{
+	color: #ffffff88;
+}
+
+
+#getting-started, #onboarding {
+	width: 100%;
+	text-align: center;
+    margin-top: 30vh;
+}
+
+.error{
+	color: pink; 
+	text-align: center; 
+}
+
+#initial-input{
+	display: inline-block;
+	width: 250px;
+	margin: 0 auto;
+}
+
+#submit-file{
+	margin: 6px;
+	font-size: 18px;
+	padding: 6px;
+	width: 100%;
+}
+
+#add-more-files{
+	background: #56CCF2;
+	width: 100%;
+	position: absolute;
+	display: block;
+	bottom: 0;
+	left: 0; 
+	display: none; 
+}
+
+button{
+	border:none;
+	position: relative; 
+	border-radius: 3px; 
+}
+
+button:hover{
+	cursor: pointer; 
+}
+
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+head{
+	height: 0;
+	width: 0;
+	padding: 0;
+	margin: 0; 
+}
+
+body{
+	display: flex; 
+	font-family: Source Sans Pro, Arial, Sans; 
+	padding: 0;
+	margin: 0; 
+}
+
+.card{
+    width: 160px; 
+    height: auto; 
+    min-height: 40px; 
+	max-height: 100px;  
+	background: #fff;
+	padding: 10px;
+	margin: 10px; 
+	display: block; 
+	cursor: pointer; 
+	border-radius: 2px; 
+    text-overflow: hidden;
+    display: block;
+    overflow: hidden;
+	position: relative; 
+    box-shadow: 0px 1px 2px #00000011;
+    font-size: 11px;
+    line-height: 13px;
+}
+
+.tags{
+	font-size: 10px; 
+	color: #aaa;
+	position: absolute; 
+	bottom: 0; 
+	padding-bottom: 6px; 
+	padding-top: 6px; 
+    background: #fff; 
+    display: none; 
+}
+
+#backgroundCover{
+	width: 100vw;
+	height: 100vh; 
+	position: fixed;
+	top: 0; 
+	left: 0; 
+	background: #00000044; 
+}
+
+#modalCard{
+	width: 400px; 
+	height: 400px; 
+	background: #fafafa; 
+	position: absolute; 
+	top: 50%;
+	left: 50%; 
+	margin-left: -200px; 
+	margin-top: -265px; 
+	display: flex; 
+	flex-direction: column; 
+	max-width: 90vw; 
+	max-height: 90vh; 
+	padding: 12px;
+	border-radius: 2px; 
+}
+
+#x{
+	font-size: 24px; 
+	font-family: Arial; 
+	line-height: 24px; 
+	height: 24px; 
+	cursor: pointer; 
+	text-align: right; 
+	width: 100%;
+}
+
+#modalCardMessage{
+	padding: 12px; 
+    margin: 12px; 
+    overflow: scroll; 
+}
+
+#modalCardTags{
+	padding: 12px; 
+	margin: 12px; 
+	color: #aaa; 
+	position: absolute; 
+	bottom: 0; 
+}
+
+.bucket{
+	min-width: 169px; 
+	min-height: 80px;
+	height: 100%; 
+	background: #eeeeeeaa; 
+    padding: 3px;
+    margin: 6px; 
+    border-radius: 2px; 
+}
+
+#modalCardDelete{
+	color: red; 
+	cursor: pointer; 
+}
+
+#modalCardDelete:hover{
+	text-decoration: underline; 
+}
