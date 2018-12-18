@@ -85,7 +85,9 @@ function parseFile(file, buckets){
 				trimMessage(row.data[0]["Message"]), //message field
 				row.data[0]["Date Submitted"], //time
 				"HotJar",
-				deSmallpdf(row.data[0]["Source URL"])//tag
+				deSmallpdf(row.data[0]["Source URL"]),//tag
+				"",
+				count //id
 			);
 			buckets[0].push(newcard);
 			}
@@ -97,7 +99,9 @@ function parseFile(file, buckets){
 				trimMessage(row.data[0]["Description"]), //message field
 				row.data[0]["Created Time"], //time
 				"FreshDesk",
-				row.data[0]["Tags"]//tag
+				row.data[0]["Tags"],//tag
+				"",
+				count //id
 			);
 			buckets[0].push(newcard);
 			}

@@ -176,13 +176,14 @@ body{
 }
 
 .bucket{
-	min-width: 169px; 
+    min-width: 180px; 
 	min-height: 80px;
 	height: 100%; 
 	background: #eeeeeeaa; 
     padding: 3px;
     margin: 6px; 
     border-radius: 2px; 
+    content-align: center; 
 }
 
 #modalCardDelete{
