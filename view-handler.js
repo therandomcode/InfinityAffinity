@@ -30,7 +30,13 @@ function drawBucket(bucketNumber) {
 	};
 	bucket.ondragleave = function() {
 		dragleave(event);
-	};
+    };
+    
+    var shortcut = document.createElement("div");
+    shortcut.className = "shortcut";
+    shortcut.id = "shortcut"+ String(bucketNumber);
+    shortcut.innerHTML = String(bucketNumber);
+    bucket.append(shortcut);  
 	document.body.append(bucket);
 }
 
@@ -222,6 +228,7 @@ function drop(ev) {
 		updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
 		ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
 	}
+	ev.currentTarget.style.backgroundColor = "#eeeeeeaa";
 }
 
 function updateCardView(cardID, fromID, toArrayID, toPos) {
@@ -229,8 +236,8 @@ function updateCardView(cardID, fromID, toArrayID, toPos) {
 	var tempCard = document.getElementById(cardID);
 	tempCard.parentNode.removeChild(tempCard);
 	var toArray = document.getElementById(toArrayID);
-	if (toArray.firstChild != null) {
-		toArray.insertBefore(tempCard, toArray.firstChild);
+	if (toArray.firstChild.nextSibling != null) {
+		toArray.insertBefore(tempCard, toArray.firstChild.nextSibling);
 	} else {
 		toArray.appendChild(tempCard);
 	}
@@ -247,7 +254,7 @@ document.addEventListener("keydown", function(event) {
     var buckets = generateModel(); 
     var key = event.keyCode;
     var tempID = -1; 
-    var cardID = document.getElementById("bucket0").firstChild.id;
+    var cardID = document.getElementById("bucket0").firstChild.nextSibling.id;
 	if (key >= 49 && key <= 58) {
         console.log(String(key-48) + "was pressed"); 
         if (key-48 >= buckets.length){
@@ -257,7 +264,13 @@ document.addEventListener("keydown", function(event) {
             console.log("tempID ", tempID);  
         } else {
             console.log("Looks like we have enough buckets.");
-		    tempID = "bucket" + String(key - 48);
+            tempID = "bucket" + String(key - 48);
+
+            var whichKey = document.getElementById("shortcut" + String(key-48));
+            var parent = whichKey.parentNode; 
+            whichKey.parentNode.removeChild(whichKey);
+            parent.insertBefore(whichKey, parent.firstChild); 
+
         }
 		updateCardView(cardID, "bucket0", tempID, 0);
 	}
