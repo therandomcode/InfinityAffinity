@@ -1,5 +1,8 @@
 
 function parseFile(file, unsortedStack, sortedStacks){ 
+    if (generateModel.length < 1){
+        drawBucket(0); 
+    }
 	var count = 0; 
 	var whichSource = "none"; 
 	Papa.parse(file, {
@@ -43,7 +46,8 @@ function parseFile(file, unsortedStack, sortedStacks){
 				"HotJar",
                 deSmallpdf(row.data[0]["Source URL"]),//tag
                 count // we'll use this as the ID for now. Probably should add something later. 
-			);
+            );
+            console.log(newcard);
 			unsortedStack.push(newcard);
 			}
 		}
@@ -57,6 +61,7 @@ function parseFile(file, unsortedStack, sortedStacks){
                 row.data[0]["Tags"],//tag
                 count
 			);
+            console.log(newcard);
 			unsortedStack.push(newcard);
 			}
 		}
@@ -70,10 +75,11 @@ function parseFile(file, unsortedStack, sortedStacks){
 			} else {
 				redraw(unsortedStack);
 				console.log("Drawing onboarding instructions");
-				document.getElementById("sorted-cards").innerHTML = '<div id="onboarding"><h2>Press A to move the first card into a new column</h2></div>';
+				document.getElementById("sorted-cards").innerHTML = '<div id="onboarding"><h2>Press 1 to move the first card into a new column</h2></div>';
 			}
 		}
 	}
 });
+
 return unsortedStack;
 }

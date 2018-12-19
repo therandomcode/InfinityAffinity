@@ -212,6 +212,40 @@ body{
 }
 
 
+.inputfile {
+    
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    color: #ffeeee;
+    background-color: pink;
+    text-align: center; 
+    display: inline-block;
+	position: fixed;
+	width: 48px;
+	height: 48px; 
+	border-radius: 100%; 
+	font-size: 24px;
+	line-height: 48px; 
+	bottom: 24px;
+	right: 24px; 
+    box-shadow: 0px 2px 16px #00000022;
+	cursor: pointer; 
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    cursor: pointer; 
+    color: white; 
+}
+
+
 @keyframes flash {
     0% {
 			background: #ffffff33; 

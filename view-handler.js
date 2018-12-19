@@ -4,7 +4,7 @@ var numBuckets = 0;
 
 function drawSortingScreen(){
     console.log("We're trying to redraw here");
-    while (document.body.firstChild) {
+    while (document.body.firstChild && document.body.firstChild.id != "file") {
         document.body.removeChild(document.body.firstChild);
     }
 
@@ -19,9 +19,15 @@ function drawSortingScreen(){
 }
 
 function drawBucket(bucketNumber) {
+    console.log("We're drawing bucket ", bucketNumber); 
+    console.log("Current number of buckets, hopefully: ", buckets, buckets.length); 
+    
 	var bucket = document.createElement("div");
 	bucket.className = "bucket";
-	bucket.id = "bucket" + String(bucketNumber);
+    bucket.id = "bucket" + String(bucketNumber);
+    if (document.getElementById(bucket.id)){
+        return; 
+    }
 	bucket.ondrop = function() {
 		drop(event);
 	};
@@ -74,6 +80,10 @@ function randomNumber(min, max) {
 }
 
 function drawCard(card) {
+    if (!card){
+        console.log("There is a problem with this card!");
+        return -1; 
+    }
 	// this will make the card a little more "real"
 	var physicalCard = document.createElement("div");
 	var tags = document.createElement("div");

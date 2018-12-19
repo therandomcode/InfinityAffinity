@@ -20,12 +20,8 @@
 		</div>
 	</div>
 
-<!--<div id="add-more-files">
-	<div id = "another-input">
-		<input id="upload-another-file" type="file"/>
-		<button id = "submit-another-file">Upload Another</button>
-	</div>
-</div>--> 
+<input type="file" name="file" id="file" class="inputfile"/>
+<label for="file">+</label></input>
 
 <script> 
 buckets = [];
@@ -33,12 +29,19 @@ currentModel = [];
 
 function init(){
     console.log("parseFile started");
-    var bigFile = document.getElementById("upload-file").files[0]; 
+	var bigFile = document.getElementById("upload-file").files[0]; 
 
 	var stacks = parseFile(bigFile, buckets);
 	if (stacks == -1){
 		return; 
 	}
+
+	document.getElementById("file").addEventListener("change", function(){
+		console.log("Trying to add another file!"); 
+		var anotherFile = document.getElementById("file").files[0]; 
+		console.log("anotherFile", anotherFile); 
+		parseFile(anotherFile, generateModel);
+	});
 	console.log("We finished executing parseFile()");
 }
 
