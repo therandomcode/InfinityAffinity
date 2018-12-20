@@ -84,7 +84,7 @@ function drawCard(card) {
     tagsContainer.innerHTML = str;
 	physicalCard.append(tagsContainer);
 	document.getElementById("bucket0").append(physicalCard);
-	return -1;
+	document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
 }
 
 function drawLargeCard(card) {
@@ -219,6 +219,7 @@ function drop(ev) {
 		ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
 	}
 	ev.currentTarget.style.backgroundColor = "#eeeeeeaa";
+	document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
 }
 
 function updateCardView(cardID, fromID, toArrayID, toPos) {
@@ -263,5 +264,6 @@ document.addEventListener("keydown", function(event) {
 
         }
 		updateCardView(cardID, "bucket0", tempID, 0);
+		document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
 	}
 });
