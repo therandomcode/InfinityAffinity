@@ -84,7 +84,7 @@ function drawCard(card) {
     tagsContainer.innerHTML = str;
 	physicalCard.append(tagsContainer);
 	document.getElementById("bucket0").append(physicalCard);
-	document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
+	redraw(); 
 }
 
 function drawLargeCard(card) {
@@ -264,6 +264,14 @@ document.addEventListener("keydown", function(event) {
 
         }
 		updateCardView(cardID, "bucket0", tempID, 0);
-		document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
+		redraw(); 
 	}
 });
+
+function redraw(){
+	var cardsRemaining = generateModel()[0].length - 1; 
+	document.getElementById("shortcut0").innerHTML = String(cardsRemaining);
+	if (cardsRemaining <= 0){
+		document.getElementById("bucket0").style.display = "none"; 
+	}
+}

@@ -7,22 +7,25 @@ function isMinimallyInteresting(str){
 
 function trimMessage(str){
 	var newstr = str;
-	if (str.split("Sent from").length > 1){
-		newstr = str.split("Sent from")[0];
+	var strings = [ 
+		"Este email puede contener",
+		"Hung from Smallpdf",
+		"The information contained in",
+		"info@smallpdf.com",
+		"Sent from",
+		"mailto",
+		"Smallpdf wrote", 
+		"YOUR SMALLPDF PRO SUBSCRIPTION",
+		
+
+	];
+	for (var i = 0; i < strings.length; i++){
+		newstr = str.split(strings)[0]; 
+		if (newstr.length <= 1 || newstr == str){ 
+			return str;
+		}
+		return newstr; 
 	}
-	if (str.split("Hung from Smallpdf").length > 1){
-		newstr = str.split("Hung from Smallpdf")[0];
-	}
-	if (str.split("The information contained in").length > 1){
-		newstr = str.split("The information contained in")[0];
-	}
-	if (str.split("info@smallpdf.com").length > 1){
-		newstr = str.split("info@smallpdf.com")[0];
-	}
-	if (newstr != str){
-		return newstr;
-	}
-	return str;
 }
 
 function deSmallpdf(str){
