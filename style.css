@@ -10,7 +10,11 @@ body {
     background: -webkit-linear-gradient(to right, #E29587, #D66D75);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #E29587, #D66D75); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	font-family: Source Sans Pro;
+	background: url( ' https://ervo.info/wp-content/uploads/2018/08/snowy-mountains-and-fog-filled-valley-wallpapers-inspirational-jungle-forest-morning-rain-fog-trees-graphy-4k-wallpaper-of-snowy-mountains-and-fog-filled-valley-wallpapers.jpg');
+	background-size: cover; 
+	background-repeat: no-repeat;
 	margin-top: 0px; 
+	overflow: hidden; 
 }
 
 .shortcut{	
@@ -201,8 +205,10 @@ body{
     padding: 3px;
     margin: 6px; 
     border-radius: 2px; 
-    content-align: center; 
+	content-align: center; 
+	overflow: scroll; 
 }
+
 
 #bucket0 .card{
 	height: auto; 

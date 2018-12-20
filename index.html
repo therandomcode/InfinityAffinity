@@ -33,6 +33,10 @@
 buckets = [];
 currentModel = []; 
 
+window.onbeforeunload = function(){
+  return 'Are you sure you want to leave?';
+};
+
 	document.getElementById("upload-file").addEventListener("change", function(){
 		console.log("Trying to add a file!"); 
 		init(); 
