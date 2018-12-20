@@ -3,33 +3,41 @@
 <head>
 	<!--Let's import all the libraries we need -->
 	<link rel = "stylesheet" type = "text/css" href = "style.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 	<script type='text/javascript' src="import.js"></script>
 	<script type='text/javascript' src="view-handler.js"></script>
 	<script type='text/javascript' src="process-text.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 </head>
 
 <body>
+	<h1 id = "logo">Affinity CSV</h1>
 	<div id="getting-started">
-		<h2>Choose the .CSV file you want to sort through</h2>
-			<p>I know how to parse HotJar and FreshDesk files.</p>
-		<div id = "initial-input">
-			<input id="upload-file" type="file"/>
-			<br>
-			<button id = "submit-file" onclick="init()">Upload</button>
+		<!--<h2>Choose the .CSV file you want to sort through</h2>--> 
+		<p>I know how to parse HotJar and FreshDesk files.</p><br>
+			<input type="file" name="upload-file" id="upload-file" class="inputfile"/>
+			<label for="upload-file" id="submit-file">Upload CSV</label></input>
 		</div>
 	</div>
 
+	<div id = "madeWithLove">Made with <span style="font-size:12px; font-weight:bold; color:#990000ee;">♥</span> for the people of the internet by <a href = "https://www.kristinawagner.website">Kristina Wagner</a></div>
+
 <input type="file" name="file" id="file" class="inputfile"/>
-<label for="file">+</label></input>
+<label for="file" id = "add-more">+</label></input>
 
 <script> 
 buckets = [];
 currentModel = []; 
 
+	document.getElementById("upload-file").addEventListener("change", function(){
+		console.log("Trying to add a file!"); 
+		init(); 
+	});
+
 function init(){
     console.log("parseFile started");
 	var bigFile = document.getElementById("upload-file").files[0]; 
+	console.log(bigFile); 
+	console.log("That was our first file"); 
 
 	var stacks = parseFile(bigFile, buckets);
 	if (stacks == -1){
@@ -92,18 +100,20 @@ function parseFile(file, buckets){
 				"",
 				count //id
 			);
+			console.log(newcard.date); 
 			buckets[0].push(newcard);
 			}
 		}
         else if (whichSource == "fd"){
 			console.log("This is a freshdesk document");
+			console.log(row.data[0]["Tags"]); 
 			if (row.data[0]["Description"] != undefined && isMinimallyInteresting(row.data[0]["Description"])){
 				var newcard = new Card(
 				trimMessage(row.data[0]["Description"]), //message field
-				row.data[0]["Created Time"], //time
-				"FreshDesk",
+				row.data[0]["Created time"], //date
+				"FreshDesk", // source
+				"", // url
 				row.data[0]["Tags"],//tag
-				"",
 				count //id
 			);
 			buckets[0].push(newcard);
@@ -129,6 +139,7 @@ return buckets[0];
 function showBuckets(){
 	console.log(buckets); 
 }
+
 
 </script>
 </body>

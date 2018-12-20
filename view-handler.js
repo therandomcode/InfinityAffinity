@@ -15,7 +15,8 @@ function drawSortingScreen(){
     drawBucket(0);
     for (var i = 0; i < buckets[0].length; i++){
         drawCard(buckets[0][i]); 
-    }
+	}
+	document.getElementById("add-more").style.visibility = "visible"; 
 }
 
 function drawBucket(bucketNumber) {
@@ -56,29 +57,6 @@ function Card(message, date, source, url, tags, id) {
     this.tags = tags;
 }
 
-function randomMessage() {
-	var messages = [
-		"hello",
-		"I don't like your software",
-		"This webapp is fun",
-		"This is a random message",
-		"The owl had a haircut",
-		"Snails have always been consistent",
-		"Three silver cars sit beside a red car in the lot",
-		"These messages are going to keep getting longer and longer so that I might have the opportunity to test cropping them."
-	];
-	return messages[randomNumber(0, messages.length)];
-}
-
-function randomDate() {
-	var dates = ["10-10-10", "11-10-19", "5th August 2009", "JUL-12-2006"];
-	return dates[randomNumber(0, dates.length)];
-}
-
-function randomNumber(min, max) {
-	return Math.floor(Math.random() * (max - min) + min);
-}
-
 function drawCard(card) {
     if (!card){
         console.log("There is a problem with this card!");
@@ -86,7 +64,7 @@ function drawCard(card) {
     }
 	// this will make the card a little more "real"
 	var physicalCard = document.createElement("div");
-	var tags = document.createElement("div");
+	var tagsContainer = document.createElement("div");
 	physicalCard.draggable = "true";
 	physicalCard.id = card.id;
 	physicalCard.className = "card";
@@ -100,9 +78,11 @@ function drawCard(card) {
 	physicalCard.ondragend = function() {
 		dragend(event);
 	};
-	tags.className = "tags";
-	tags.innerHTML = card.id + " " + card.date + " " + card.source + " " + card.url;
-	physicalCard.append(tags);
+	tagsContainer.className = "tags";
+    console.log("This is the card tags", card.tags);
+    var str = String(card.tags + card.date + card.url + card.source + card.id); 
+    tagsContainer.innerHTML = str;
+	physicalCard.append(tagsContainer);
 	document.getElementById("bucket0").append(physicalCard);
 	return -1;
 }

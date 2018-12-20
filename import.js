@@ -1,5 +1,6 @@
 
 function parseFile(file, unsortedStack, sortedStacks){ 
+    console.log("Parse was started"); 
     if (generateModel.length < 1){
         drawBucket(0); 
     }
@@ -46,8 +47,7 @@ function parseFile(file, unsortedStack, sortedStacks){
 				"HotJar",
                 deSmallpdf(row.data[0]["Source URL"]),//tag
                 count // we'll use this as the ID for now. Probably should add something later. 
-            );
-            console.log(newcard);
+			);
 			unsortedStack.push(newcard);
 			}
 		}
@@ -61,7 +61,6 @@ function parseFile(file, unsortedStack, sortedStacks){
                 row.data[0]["Tags"],//tag
                 count
 			);
-            console.log(newcard);
 			unsortedStack.push(newcard);
 			}
 		}

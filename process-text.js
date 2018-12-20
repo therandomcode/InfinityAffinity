@@ -20,7 +20,6 @@ function trimMessage(str){
 		newstr = str.split("info@smallpdf.com")[0];
 	}
 	if (newstr != str){
-		console.log(str, newstr);
 		return newstr;
 	}
 	return str;
