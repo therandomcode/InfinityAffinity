@@ -37,6 +37,7 @@ body {
 
 #logo{
 	padding: 24px; 
+	padding-left: 36px;
 	padding-top: 12px; 
 	width: auto; 
 	height: 30px; 
@@ -65,7 +66,7 @@ p2{
 a{
 	color: #ffffffaa;
 	text-decoration: none; 
-	cursor: pointer; 
+	cursor: pointer; h
 }
 a:hover{
 	text-decoration: underline; 

@@ -34,7 +34,9 @@ buckets = [];
 currentModel = []; 
 
 window.onbeforeunload = function(){
-  return 'Are you sure you want to leave?';
+	if (document.getElementById("bucket1")){
+ 		return 'Are you sure you want to leave?';
+	}
 };
 
 	document.getElementById("upload-file").addEventListener("change", function(){
