@@ -127,6 +127,41 @@ function closeLargeCard(card) {
 	bg.parentNode.removeChild(bg);
 }
 
+
+function drawSelectionModal(headers) {
+	var bg = document.createElement("div");
+	var modalCard = document.createElement("div");
+	var modalCardX = document.createElement("div");
+	var modalCardTitle = document.createElement("div");
+	var modalCardOptions = document.createElement("div");
+	for (var i = 0; i < headers.length; i++){
+		var option = document.createElement("div");
+		option.id = String(headers[i]);
+		option.className = "selectionOption"; 
+		option.innerHTML = String(option.id); 
+		modalCardOptions.append(option); 
+		option.addEventListener("click", function(ev){
+			console.log("The selected option is: ", event.target.id); 
+		});
+	}
+	modalCard.id = "modalCard";
+	modalCardTitle.id = "modalCardTitle"; 
+	modalCardX.id = "x";
+	modalCardTitle.innerHTML = "Please select what you would like to use as a message";
+	bg.id = "backgroundCover";
+
+	modalCardX.innerHTML = "x";
+	modalCardX.onclick = function() {
+		//closeLargeCard(card);
+	};
+
+	document.body.append(bg);
+	modalCard.append(modalCardX);
+	modalCard.append(modalCardTitle);
+	modalCard.append(modalCardOptions);
+	document.body.append(modalCard);
+}
+
 function generateModel(){
 	var model = [[]]; 
 	var buckets = document.getElementsByClassName("bucket"); 

@@ -226,6 +226,24 @@ body{
 	text-decoration: underline; 
 }
 
+#modalCardTitle{
+	padding: 12px;
+	font-size: 18px;
+	font-weight: 600; 
+}
+
+.selectionOption{
+	padding: 6px;
+	padding-left: 12px; 
+	border-radius: 2px; 
+	width: auto; 
+	cursor: pointer; 
+}
+
+.selectionOption:hover{
+	background: #eee; 
+}
+
 .inputfile {
 	width: 0.1px;
 	height: 0.1px;

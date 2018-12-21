@@ -14,7 +14,6 @@
 		<h1>Affinity CSV</h1>
 	</div>
 	<div id="getting-started">
-		<!--<h2>Choose the .CSV file you want to sort through</h2>--> 
 		<p>I know how to parse HotJar and FreshDesk files.</p><br>
 			<input type="file" name="upload-file" id="upload-file" class="inputfile"/>
 			<label for="upload-file" id="submit-file">Upload CSV</label></input>
@@ -22,10 +21,9 @@
 	</div>
 
 	<div id = "madeWithLove">
-
 		<p><a onclick = "about()">About</a></p>
-		<p2>Made with <span style="font-size:12px; font-weight:bold; color:#990000ee;">♥</span> for the people of the internet by <a href = "https://www.kristinawagner.website">Kristina Wagner</a></div>
-		</p2>
+		<p2>Made with <span style="font-size:12px; font-weight:bold; color:#990000ee;">♥</span> for the people of the internet by <a href = "https://www.kristinawagner.website">Kristina Wagner</a>
+		</p2></div>
 <input type="file" name="file" id="file" class="inputfile"/>
 <label for="file" id = "add-more">+</label></input>
 
@@ -39,10 +37,10 @@ window.onbeforeunload = function(){
 	}
 };
 
-	document.getElementById("upload-file").addEventListener("change", function(){
-		console.log("Trying to add a file!"); 
-		init(); 
-	});
+document.getElementById("upload-file").addEventListener("change", function(){
+	console.log("Trying to add a file!"); 
+	init(); 
+});
 
 function init(){
     console.log("parseFile started");
@@ -72,7 +70,7 @@ function parseFile(file, buckets){
 	header: true,
 	step: function(row) {
 		// First, let's figure out if this is HotJar. We only run this check on the first entry. 	
-		if (count == 0){
+		if (count === 0){
 			console.log("Here is the data we are looking at", row.data[0]);
 			/* If this is a HotJar .CSV */
 			if 
@@ -95,11 +93,15 @@ function parseFile(file, buckets){
 			{
 				whichSource = "fd";
 			}
-			else {
-				console.log("This doesn't look like a CSV I know or understand yet");
-			}
+			console.log("This doesn't look like a CSV I know or understand yet");
+			count++; 
+			var result = Object.keys(row.data[0]);
+			console.log(result);
+			drawSelectionModal(Object.keys(row.data[0])); 
+			document.getElementById("getting-started").innerHTML += '<br><br><div class="error">This doesnt look like a CSV I know or understand yet. Try again :( </div>';
+			document.getElementById("upload-file").value = ''; 
+			return; 
 		}
-		count++; 
 		if (whichSource == "hj"){
 			console.log("This is a hotjar document");
 			if (row.data[0]["Message"] != undefined && isMinimallyInteresting(row.data[0]["Message"])){
@@ -133,15 +135,9 @@ function parseFile(file, buckets){
 	},
 	complete: function() {
 		console.log("All done!");
-				drawSortingScreen(); 
-		if (buckets.size == 0){
-			if (whichSource == "none"){
-				document.getElementById("getting-started").innerHTML += '<div class="error">This doesnt look like a CSV I know or understand yet. Try again :( </div>';
-				return -1; 
-			} else {
-				//draw onboarding instructions
-			}
-		}
+		if (buckets[0].length > 1){
+			drawSortingScreen(); 
+		} 
 	}
 });
 return buckets[0];
