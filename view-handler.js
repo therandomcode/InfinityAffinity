@@ -270,6 +270,12 @@ function about(){
 	var aboutCard = new Card(
 	"If you work in industry, you probably collect data from feedback widgets. "+ 
 	"You can usually export that data as a .CSV file. " +
-	"Affinity CSV puts that data into a format where you can organize data into like columns to crystallize insights." );
+	"Affinity CSV puts that data into a format where you can organize data into like columns to crystallize insights." ,
+	"21 December 2018", 
+	"",
+	"",
+	"",
+	"" 
+	);
 	drawLargeCard(aboutCard); 
 }
