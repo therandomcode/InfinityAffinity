@@ -10,8 +10,9 @@ body {
     background: -webkit-linear-gradient(to right, #E29587, #D66D75);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #E29587, #D66D75); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	font-family: Source Sans Pro;
-	background: url( ' https://ervo.info/wp-content/uploads/2018/08/snowy-mountains-and-fog-filled-valley-wallpapers-inspirational-jungle-forest-morning-rain-fog-trees-graphy-4k-wallpaper-of-snowy-mountains-and-fog-filled-valley-wallpapers.jpg');
-	background-size: cover; 
+	background-color: #0D2027;
+	background-image: url( ' https://ervo.info/wp-content/uploads/2018/08/snowy-mountains-and-fog-filled-valley-wallpapers-inspirational-jungle-forest-morning-rain-fog-trees-graphy-4k-wallpaper-of-snowy-mountains-and-fog-filled-valley-wallpapers.jpg');
+	background-size: 100%; 
 	background-repeat: no-repeat;
 	margin-top: 0px; 
 }
@@ -64,6 +65,7 @@ p2{
 a{
 	color: #ffffffaa;
 	text-decoration: none; 
+	cursor: pointer; 
 }
 a:hover{
 	text-decoration: underline; 
@@ -234,7 +236,8 @@ body{
 
 #add-more {
     color: #ffeeee;
-    background-color: pink;
+	background-color: pink;
+	background-color: #7F98A3; 
     text-align: center; 
     display: inline-block;
 	position: fixed;
@@ -262,6 +265,7 @@ body{
 	width: 100%;
 	border-radius: 30px; 
 	color: #D66D75; 
+	color: #7F98A3; 
 	cursor: pointer; 
 	background: white; 
 	padding-left: 30px;
@@ -270,20 +274,21 @@ body{
 }
 
 #submit-file:hover{
-	color: #E67D85; 
+	color: #E67D85;
+	color: #788997;  
 }
 
 
 @keyframes flash {
     0% {
-			background: #ffffff33; 
+		background: #ffffff33; 
     }
 	
 	30%{
 		background: #ffffff33; 
 	}
     100% {
-      transform: translateY(0);
-			background: transparent; 
+      	transform: translateY(0);
+		background: transparent; 
     }
 }

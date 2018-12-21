@@ -3,7 +3,6 @@ currentModel = [];
 var numBuckets = 0;
 
 function drawSortingScreen(){
-    console.log("We're trying to redraw here");
     while (document.body.firstChild && document.body.firstChild.id != "file") {
         document.body.removeChild(document.body.firstChild);
     }
@@ -20,9 +19,6 @@ function drawSortingScreen(){
 }
 
 function drawBucket(bucketNumber) {
-    console.log("We're drawing bucket ", bucketNumber); 
-    console.log("Current number of buckets, hopefully: ", buckets, buckets.length); 
-    
 	var bucket = document.createElement("div");
 	bucket.className = "bucket";
     bucket.id = "bucket" + String(bucketNumber);
@@ -59,7 +55,7 @@ function Card(message, date, source, url, tags, id) {
 
 function drawCard(card) {
     if (!card){
-        console.log("There is a problem with this card!");
+        console.log("The card does not appear to exist.");
         return -1; 
     }
 	// this will make the card a little more "real"
@@ -79,7 +75,6 @@ function drawCard(card) {
 		dragend(event);
 	};
 	tagsContainer.className = "tags";
-    console.log("This is the card tags", card.tags);
     var str = String(card.tags + card.date + card.url + card.source + card.id); 
     tagsContainer.innerHTML = str;
 	physicalCard.append(tagsContainer);
@@ -133,7 +128,6 @@ function closeLargeCard(card) {
 }
 
 function generateModel(){
-	console.log("generating model");
 	var model = [[]]; 
 	var buckets = document.getElementsByClassName("bucket"); 
 	for (var i = 0; i < (buckets.length); i++){
@@ -145,11 +139,11 @@ function generateModel(){
 			}
 		}
 	}
-	console.log("final model: ", model);
 	return model; 
 }
 
 function updateBucket(cardID, fromBucketID, targetID) {
+	console.log("from bucket id ", fromBucketID); 
 	var fromPosition = -1;
 	var toPosition = -1;
 	var card = cardID.substring(4);
@@ -188,8 +182,7 @@ function updateBucket(cardID, fromBucketID, targetID) {
 
 function allowDrop(ev) {
     ev.preventDefault();
-	ev.currentTarget.style.backgroundColor = "#ddd";
-    
+	ev.currentTarget.style.backgroundColor = "#ddd";    
 }
 
 function drag(ev) {
@@ -210,8 +203,6 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");
     buckets = generateModel(); 
 	if (ev.target.className == "bucket") {
-        console.log("dropping on a bucket");
-        console.log(ev.target.id); 
 		updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
 		ev.target.appendChild(document.getElementById(data));
 	} else if (ev.target.className == "card") {
@@ -220,10 +211,10 @@ function drop(ev) {
 	}
 	ev.currentTarget.style.backgroundColor = "#eeeeeeaa";
 	document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
+	redraw(); 
 }
 
 function updateCardView(cardID, fromID, toArrayID, toPos) {
-	console.log("updateCardView");
 	var tempCard = document.getElementById(cardID);
 	tempCard.parentNode.removeChild(tempCard);
 	var toArray = document.getElementById(toArrayID);
@@ -244,17 +235,16 @@ function deleteCard(card){
 document.addEventListener("keydown", function(event) {
     var buckets = generateModel(); 
     var key = event.keyCode;
-    var tempID = -1; 
+	var tempID = -1; 
+	if (!document.getElementById("bucket0").firstChild.nextSibling){
+		return; 
+	}
     var cardID = document.getElementById("bucket0").firstChild.nextSibling.id;
 	if (key >= 49 && key <= 58) {
-        console.log(String(key-48) + "was pressed"); 
         if (key-48 >= buckets.length){
-            console.log("We don't have enough buckets!"); 
             drawBucket(buckets.length);
             tempID = "bucket" + String(buckets.length);
-            console.log("tempID ", tempID);  
         } else {
-            console.log("Looks like we have enough buckets.");
             tempID = "bucket" + String(key - 48);
 
             var whichKey = document.getElementById("shortcut" + String(key-48));
@@ -274,4 +264,12 @@ function redraw(){
 	if (cardsRemaining <= 0){
 		document.getElementById("bucket0").style.display = "none"; 
 	}
+}
+
+function about(){
+	var aboutCard = new Card(
+	"If you work in industry, you probably collect data from feedback widgets. "+ 
+	"You can usually export that data as a .CSV file. " +
+	"Affinity CSV puts that data into a format where you can organize data into like columns to crystallize insights." );
+	drawLargeCard(aboutCard); 
 }

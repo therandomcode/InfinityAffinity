@@ -11,7 +11,7 @@ function parseFile(file, unsortedStack, sortedStacks){
 	step: function(row) {
 		// First, let's figure out if this is HotJar. We only run this check on the first entry. 	
 		if (count == 0){
-			console.log("Here is the data we are looking at", row.data[0]);
+			//console.log("Here is the data we are looking at", row.data[0]);
 			/* If this is a HotJar .CSV */
 			if 
 				('Browser' in row.data[0] 
@@ -22,6 +22,7 @@ function parseFile(file, unsortedStack, sortedStacks){
 				&& 'Message' in row.data[0])
 			{
 				whichSource = "hj";
+				console.log("This is a hotjar document");
 			}
 			/* If this is a FreshDesk .CSV */
 			else if (
@@ -32,6 +33,7 @@ function parseFile(file, unsortedStack, sortedStacks){
 				&& 'Description' in row.data[0])
 			{
 				whichSource = "fd";
+				console.log("This is a freshdesk document");
 			}
 			else {
 				console.log("This doesn't look like a CSV I know or understand yet");
@@ -39,7 +41,6 @@ function parseFile(file, unsortedStack, sortedStacks){
 		}
 		count++; 
 		if (whichSource == "hj"){
-			console.log("This is a hotjar document");
 			if (row.data[0]["Message"] != undefined && isMinimallyInteresting(row.data[0]["Message"])){
 				var newcard = new Card(
 				trimMessage(row.data[0]["Message"]), //message field
@@ -52,7 +53,6 @@ function parseFile(file, unsortedStack, sortedStacks){
 			}
 		}
         else if (whichSource == "fd"){
-			console.log("This is a freshdesk document");
 			if (row.data[0]["Description"] != undefined && isMinimallyInteresting(row.data[0]["Description"])){
 				var newcard = new Card(
 				trimMessage(row.data[0]["Description"]), //message field
