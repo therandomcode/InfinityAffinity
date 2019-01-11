@@ -65,6 +65,12 @@ function init(){
 function parseFile(file, buckets){ 
 	buckets[0] = []; 
 	var count = 0; 
+	var message = "";
+	var time = "";
+	var source = "";
+	var tags = "";
+	var url = ""; 
+
 	var whichSource = "none"; 
 	Papa.parse(file, {
 	header: true,
@@ -73,16 +79,15 @@ function parseFile(file, buckets){
 		if (count === 0){
 			console.log("Here is the data we are looking at", row.data[0]);
 			/* If this is a HotJar .CSV */
-			if 
-				('Browser' in row.data[0] 
+			if ('Browser' in row.data[0] 
 				&& 'Country' in row.data[0] 
 				&& 'Date Submitted' in row.data[0]
 				&& 'Device' in row.data[0]
 				&& 'Email' in row.data[0]
 				&& 'Message' in row.data[0])
-			{
-				whichSource = "hj";
-			}
+				{
+					whichSource = "hj";
+				}
 			/* If this is a FreshDesk .CSV */
 			else if (
 				'Ticket ID' in row.data[0]
@@ -90,54 +95,52 @@ function parseFile(file, buckets){
 				&& 'Created time' in row.data[0] 
 				&& 'Source' in row.data[0] 
 				&& 'Description' in row.data[0])
-			{
-				whichSource = "fd";
+				{
+					whichSource = "fd";
+				}
+			else {
+				drawSelectionModal(Object.keys(row.data[0])); 
 			}
 			console.log("This doesn't look like a CSV I know or understand yet");
 			count++; 
 			var result = Object.keys(row.data[0]);
-			console.log(result);
-			drawSelectionModal(Object.keys(row.data[0])); 
 			document.getElementById("getting-started").innerHTML += '<br><br><div class="error">This doesnt look like a CSV I know or understand yet. Try again :( </div>';
 			document.getElementById("upload-file").value = ''; 
-			return; 
+			 
 		}
 		if (whichSource == "hj"){
 			console.log("This is a hotjar document");
-			if (row.data[0]["Message"] != undefined && isMinimallyInteresting(row.data[0]["Message"])){
-				var newcard = new Card(
-				trimMessage(row.data[0]["Message"]), //message field
-				row.data[0]["Date Submitted"], //time
-				"HotJar",
-				deSmallpdf(row.data[0]["Source URL"]),//tag
-				"",
-				count //id
-			);
-			console.log(newcard.date); 
-			buckets[0].push(newcard);
-			}
+			message = "Message"; 
+			time = "Date Submitted";
+			source = "HotJar"; 
+			tags = ""
+			url = "Source URL"; 
 		}
         else if (whichSource == "fd"){
 			console.log("This is a freshdesk document");
-			console.log(row.data[0]["Tags"]); 
-			if (row.data[0]["Description"] != undefined && isMinimallyInteresting(row.data[0]["Description"])){
-				var newcard = new Card(
-				trimMessage(row.data[0]["Description"]), //message field
-				row.data[0]["Created time"], //date
-				"FreshDesk", // source
-				"", // url
-				row.data[0]["Tags"],//tag
-				count //id
-			);
-			buckets[0].push(newcard);
-			}
+			message = "Description"; 
+			time = "Created Time";
+			source = "FreshDesk"; 
+			tags = "Tags";
+			url = ""; 
+		} else {
+			console.log("this is a custom document"); 
+			var ids = document.getElementById("ids").innerHTML; 
+			message = "ids[0]"; 
+			time = "";
+			source = "Custom Source"; 
+			tags = "";
+			url = ""; 
 		}
+		if (row.data[0][message] != undefined && isMinimallyInteresting(row.data[0][message])){
+				var newcard = addCard(row.data[0], message, time, source, tags, url); 
+				console.log(newcard.date); 
+				buckets[0].push(newcard);
+			}
 	},
 	complete: function() {
 		console.log("All done!");
-		if (buckets[0].length > 1){
-			drawSortingScreen(); 
-		} 
+		drawSortingScreen(); 
 	}
 });
 return buckets[0];
@@ -145,6 +148,18 @@ return buckets[0];
 
 function showBuckets(){
 	console.log(buckets); 
+}
+
+function addCard(data, message, time, source, tags, url, uniqueid, count){
+		var newcard = new Card(
+		trimMessage(data[message]), //message field
+		data[time], //date
+		source, // source
+		url, // url
+		data[tags],//tag
+		count //id
+	);
+	return newcard; 
 }
 
 

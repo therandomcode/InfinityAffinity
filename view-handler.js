@@ -3,6 +3,7 @@ currentModel = [];
 var numBuckets = 0;
 
 function drawSortingScreen(){
+	console.log("We are trying to draw the sorting screen!"); 
     while (document.body.firstChild && document.body.firstChild.id != "file") {
         document.body.removeChild(document.body.firstChild);
     }
@@ -134,6 +135,7 @@ function drawSelectionModal(headers) {
 	var modalCardX = document.createElement("div");
 	var modalCardTitle = document.createElement("div");
 	var modalCardOptions = document.createElement("div");
+	var modalButton = document.createElement("div");
 	for (var i = 0; i < headers.length; i++){
 		var option = document.createElement("div");
 		option.id = String(headers[i]);
@@ -142,23 +144,44 @@ function drawSelectionModal(headers) {
 		modalCardOptions.append(option); 
 		option.addEventListener("click", function(ev){
 			console.log("The selected option is: ", event.target.id); 
+			document.getElementById(event.target.id).classList.toggle("selectedOption");
+			//option.classList.toggle('selectedOption'); 
 		});
 	}
 	modalCard.id = "modalCard";
 	modalCardTitle.id = "modalCardTitle"; 
 	modalCardX.id = "x";
+	modalCardOptions.id = "modalCardOptions"; 
+	modalButton.id = "modalButton"; 
+	modalButton.innerHTML = "Next"; 
+	modalButton.addEventListener("click", function (ev){
+		var ids = []; 
+		console.log("We have clicked a button!"); 
+		var foundOptions = document.getElementsByClassName("selectedOption");
+		for (var i = 0; i < foundOptions.length; i++){
+			ids.push(foundOptions[i].id); 
+		} 
+		console.log("The IDs are: ", ids); 
+
+		var msgId = document.createElement("div");
+		msgId.innerHTML = ids; 
+		msgId.id = "ids"; 
+		document.getElementById("getting-started").appendChild(msgId); 
+		closeLargeCard(modalCard);
+		return ids;
+	});
 	modalCardTitle.innerHTML = "Please select what you would like to use as a message";
 	bg.id = "backgroundCover";
-
 	modalCardX.innerHTML = "x";
 	modalCardX.onclick = function() {
-		//closeLargeCard(card);
+		closeLargeCard(modalCard);
 	};
 
 	document.body.append(bg);
 	modalCard.append(modalCardX);
 	modalCard.append(modalCardTitle);
 	modalCard.append(modalCardOptions);
+	modalCard.append(modalButton); 
 	document.body.append(modalCard);
 }
 

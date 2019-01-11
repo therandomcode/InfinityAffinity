@@ -173,6 +173,34 @@ body{
 	border-radius: 2px; 
 }
 
+#modalCardOptions{
+	overflow: scroll; 
+	background: white; 
+	margin-bottom: 60px;
+	border-radius: 2px; 
+}
+
+#modalButton{
+	width: 380px;
+	margin: 12px; 
+	height: 48px;
+	line-height: 48px; 
+	position: absolute;
+	bottom: 0; 
+	text-align: center; 
+	border: 1px solid black; 
+	border-radius: 5px;  
+	color: white; 
+	background: #323232;
+	cursor: pointer; 
+	text-transform: uppercase;
+	font-weight: 600; 
+}
+
+#modalButton:hover{
+	background: #212121;
+}
+
 #x{
 	font-size: 24px; 
 	font-family: Arial; 
@@ -235,13 +263,34 @@ body{
 .selectionOption{
 	padding: 6px;
 	padding-left: 12px; 
+	padding-right: 12px; 
 	border-radius: 2px; 
 	width: auto; 
+	margin-right: 12px; 
 	cursor: pointer; 
+	border: 1px solid transparent; 
+	border-left: 2px solid transparent; 
 }
 
 .selectionOption:hover{
 	background: #eee; 
+}
+
+.selectedOption{
+	background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Check_mark_23x20_04.svg/1178px-Check_mark_23x20_04.svg.png);
+	background-image: url(http://pluspng.com/img-png/tick-box-png-checked-checkbox-icon-png-50-px-1600.png);
+	background-size: 12px; 
+	background-position: right; 
+	background-repeat: no-repeat;
+	font-weight: 600; 
+	border-left: 2px solid black; 
+}
+
+.selectedOption:hover{
+	background-image: url(http://pluspng.com/img-png/tick-box-png-checked-checkbox-icon-png-50-px-1600.png);
+	background-size: 12px;
+	background-position: right; 
+	background-repeat: no-repeat;
 }
 
 .inputfile {
