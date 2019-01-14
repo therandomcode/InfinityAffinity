@@ -28,8 +28,6 @@
 <label for="file" id = "add-more">+</label></input>
 
 <script> 
-buckets = [];
-currentModel = []; 
 
 window.onbeforeunload = function(){
 	if (document.getElementById("bucket1")){
@@ -48,7 +46,7 @@ function init(){
 	console.log(bigFile); 
 	console.log("That was our first file"); 
 
-	var stacks = parseFile(bigFile, buckets);
+	var stacks = parseFile(bigFile);
 	if (stacks == -1){
 		return; 
 	}
@@ -62,8 +60,7 @@ function init(){
 	console.log("We finished executing parseFile()");
 }
 
-function parseFile(file, buckets){ 
-	buckets[0] = []; 
+function parseFile(file){ 
 	var count = 0; 
 	var message = "";
 	var time = "";
@@ -74,6 +71,7 @@ function parseFile(file, buckets){
 	var whichSource = "none"; 
 	Papa.parse(file, {
 	header: true,
+	preview: 1,
 	step: function(row) {
 		// First, let's figure out if this is HotJar. We only run this check on the first entry. 	
 		if (count === 0){
@@ -87,6 +85,13 @@ function parseFile(file, buckets){
 				&& 'Message' in row.data[0])
 				{
 					whichSource = "hj";
+					console.log("This is a hotjar document");
+					message = "Message"; 
+					time = "Date Submitted";
+					source = "HotJar"; 
+					tags = ""
+					url = "Source URL"; 
+					parseWholeFile(file, message, time, source, tags, url); 
 				}
 			/* If this is a FreshDesk .CSV */
 			else if (
@@ -97,67 +102,55 @@ function parseFile(file, buckets){
 				&& 'Description' in row.data[0])
 				{
 					whichSource = "fd";
+					console.log("This is a freshdesk document");
+					message = "Description"; 
+					time = "Created Time";
+					source = "FreshDesk"; 
+					tags = "Tags";
+					url = ""; 
+					parseWholeFile(file, message, time, source, tags, url); 
 				}
 			else {
-				drawSelectionModal(Object.keys(row.data[0])); 
+				drawSelectionModal(Object.keys(row.data[0]), file); 
 			}
-			console.log("This doesn't look like a CSV I know or understand yet");
-			count++; 
-			var result = Object.keys(row.data[0]);
-			document.getElementById("getting-started").innerHTML += '<br><br><div class="error">This doesnt look like a CSV I know or understand yet. Try again :( </div>';
-			document.getElementById("upload-file").value = ''; 
-			 
+			count++;
+			console.log(count);  
 		}
-		if (whichSource == "hj"){
-			console.log("This is a hotjar document");
-			message = "Message"; 
-			time = "Date Submitted";
-			source = "HotJar"; 
-			tags = ""
-			url = "Source URL"; 
-		}
-        else if (whichSource == "fd"){
-			console.log("This is a freshdesk document");
-			message = "Description"; 
-			time = "Created Time";
-			source = "FreshDesk"; 
-			tags = "Tags";
-			url = ""; 
-		} else {
-			console.log("this is a custom document"); 
-			var ids = document.getElementById("ids").innerHTML; 
-			message = "ids[0]"; 
-			time = "";
-			source = "Custom Source"; 
-			tags = "";
-			url = ""; 
-		}
+	},
+	complete: function() {
+		console.log("All done!");
+	}
+});
+}
+
+
+function parseWholeFile(file, message, time, source, tags, url){ 
+	var newCardsList = [];  
+	Papa.parse(file, {
+	header: true,
+	step: function(row) {
+		console.log(row.data[0][message]);
 		if (row.data[0][message] != undefined && isMinimallyInteresting(row.data[0][message])){
 				var newcard = addCard(row.data[0], message, time, source, tags, url); 
-				console.log(newcard.date); 
-				buckets[0].push(newcard);
+				newCardsList.push(newcard);
 			}
 	},
 	complete: function() {
 		console.log("All done!");
-		drawSortingScreen(); 
+		drawSortingScreen(newCardsList); 
 	}
 });
-return buckets[0];
-}
-
-function showBuckets(){
-	console.log(buckets); 
 }
 
 function addCard(data, message, time, source, tags, url, uniqueid, count){
+	console.log("In add card: ", data[message]); 
 		var newcard = new Card(
 		trimMessage(data[message]), //message field
 		data[time], //date
 		source, // source
 		url, // url
 		data[tags],//tag
-		count //id
+		String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID //id
 	);
 	return newcard; 
 }

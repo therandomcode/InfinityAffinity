@@ -1,20 +1,22 @@
-buckets = [];
-currentModel = []; 
-var numBuckets = 0;
-
-function drawSortingScreen(){
-	console.log("We are trying to draw the sorting screen!"); 
-    while (document.body.firstChild && document.body.firstChild.id != "file") {
+function drawSortingScreen(newCards){
+	if (document.getElementsByClassName("bucket").length === 0){
+		// If we haven't drawn the sorting screen once, do that
+		while (document.body.firstChild && document.body.firstChild.id != "file") {
         document.body.removeChild(document.body.firstChild);
-    }
+    	}
+	}
+	// If we have previously sorted all the cards, add them back 
+	if (!document.getElementById("bucket0")){
+		drawBucket(0);
+	}
 
-    if (buckets.length < 1){
-        console.log("Something went wrong during upload."); 
+    if (document.getElementsByClassName("bucket").length < 1){
+        alert("Something went wrong during upload."); 
         return; 
-    } 
-    drawBucket(0);
-    for (var i = 0; i < buckets[0].length; i++){
-        drawCard(buckets[0][i]); 
+	} 
+	
+    for (var i = 0; i < newCards.length; i++){
+        drawCard(newCards[i]); 
 	}
 	document.getElementById("add-more").style.visibility = "visible"; 
 }
@@ -26,13 +28,13 @@ function drawBucket(bucketNumber) {
     if (document.getElementById(bucket.id)){
         return; 
     }
-	bucket.ondrop = function() {
+	bucket.ondrop = function(event) {
 		drop(event);
 	};
-	bucket.ondragover = function() {
+	bucket.ondragover = function(event) {
 		allowDrop(event);
 	};
-	bucket.ondragleave = function() {
+	bucket.ondragleave = function(event) {
 		dragleave(event);
     };
     
@@ -66,17 +68,17 @@ function drawCard(card) {
 	physicalCard.id = card.id;
 	physicalCard.className = "card";
 	physicalCard.innerHTML = card.message;
-	physicalCard.onclick = function() {
+	physicalCard.onclick = function(event) {
 		drawLargeCard(card);
 	};
-	physicalCard.ondragstart = function() {
+	physicalCard.ondragstart = function(event) {
 		drag(event);
 	};
-	physicalCard.ondragend = function() {
+	physicalCard.ondragend = function(event) {
 		dragend(event);
 	};
 	tagsContainer.className = "tags";
-    var str = String(card.tags + card.date + card.url + card.source + card.id); 
+    var str = String(card.tags + card.date + card.url + card.source + "ID: " + card.id); 
     tagsContainer.innerHTML = str;
 	physicalCard.append(tagsContainer);
 	document.getElementById("bucket0").append(physicalCard);
@@ -129,7 +131,7 @@ function closeLargeCard(card) {
 }
 
 
-function drawSelectionModal(headers) {
+function drawSelectionModal(headers, file) {
 	var bg = document.createElement("div");
 	var modalCard = document.createElement("div");
 	var modalCardX = document.createElement("div");
@@ -142,10 +144,9 @@ function drawSelectionModal(headers) {
 		option.className = "selectionOption"; 
 		option.innerHTML = String(option.id); 
 		modalCardOptions.append(option); 
-		option.addEventListener("click", function(ev){
+		option.addEventListener("click", function(ev, file){
 			console.log("The selected option is: ", event.target.id); 
 			document.getElementById(event.target.id).classList.toggle("selectedOption");
-			//option.classList.toggle('selectedOption'); 
 		});
 	}
 	modalCard.id = "modalCard";
@@ -156,17 +157,11 @@ function drawSelectionModal(headers) {
 	modalButton.innerHTML = "Next"; 
 	modalButton.addEventListener("click", function (ev){
 		var ids = []; 
-		console.log("We have clicked a button!"); 
 		var foundOptions = document.getElementsByClassName("selectedOption");
 		for (var i = 0; i < foundOptions.length; i++){
 			ids.push(foundOptions[i].id); 
 		} 
-		console.log("The IDs are: ", ids); 
-
-		var msgId = document.createElement("div");
-		msgId.innerHTML = ids; 
-		msgId.id = "ids"; 
-		document.getElementById("getting-started").appendChild(msgId); 
+		parseWholeFile(file, ids[0], "", "Custom Source", "", "");
 		closeLargeCard(modalCard);
 		return ids;
 	});
@@ -203,6 +198,7 @@ function generateModel(){
 function updateBucket(cardID, fromBucketID, targetID) {
 	console.log("from bucket id ", fromBucketID); 
 	var fromPosition = -1;
+	var buckets = generateModel(); 
 	var toPosition = -1;
 	var card = cardID.substring(4);
 	var toBucket = -1;
@@ -329,11 +325,11 @@ function about(){
 	"If you work in industry, you probably collect data from feedback widgets. "+ 
 	"You can usually export that data as a .CSV file. " +
 	"Affinity CSV puts that data into a format where you can organize data into like columns to crystallize insights." ,
-	"21 December 2018", 
-	"",
-	"",
-	"",
-	"" 
+	"21 December 2018", //date
+	"", //source
+	"", //url
+	"", //tag
+	String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID
 	);
 	drawLargeCard(aboutCard); 
 }
