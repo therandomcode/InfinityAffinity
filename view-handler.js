@@ -38,11 +38,22 @@ function drawBucket(bucketNumber) {
 		dragleave(event);
     };
     
-    var shortcut = document.createElement("div");
+	var bucketActions = document.createElement("div");
+	var shortcut = document.createElement("div");
+	var cardCount = document.createElement("div"); 
+
     shortcut.className = "shortcut";
     shortcut.id = "shortcut"+ String(bucketNumber);
-    shortcut.innerHTML = String(bucketNumber);
-    bucket.append(shortcut);  
+	shortcut.innerHTML = String(bucketNumber);
+	
+	cardCount.className = "cardCount"; 
+	cardCount.id = "cardCount" + String(bucketNumber);
+	
+	bucketActions.className = "bucketActions";
+	bucketActions.id = "bucketActions" + String(bucketNumber);
+	bucketActions.append(shortcut);  
+	bucketActions.append(cardCount);
+    bucket.append(bucketActions);  
 	document.body.append(bucket);
 }
 
@@ -91,32 +102,83 @@ function drawLargeCard(card) {
 	var modalCardX = document.createElement("div");
 	var modalCardMessage = document.createElement("div");
 	var modalCardTags = document.createElement("div");
+	var modalCardActions = document.createElement("div");
 	var modalCardDelete = document.createElement("div");
+	var modalCardPromote = document.createElement("div");
 	modalCard.id = "modalCard";
 	modalCardX.id = "x";
 	modalCardMessage.id = "modalCardMessage";
 	modalCardTags.id = "modalCardTags";
+	modalCardActions.className = "modalCardActions";
 	modalCardDelete.id = "modalCardDelete";
+	modalCardPromote.id = "modalCardPromote";
+	modalCardDelete.className = "modalCardAction";
+	modalCardPromote.className = "modalCardAction";
 	bg.id = "backgroundCover";
 
 	modalCardX.innerHTML = "x";
 	modalCardDelete.innerHTML = "Delete";
+	if (document.getElementById(card.id).classList.contains( "blueCard")){
+		modalCardPromote.innerHTML = "Demote to normal card"; 
+	} else {
+		modalCardPromote.innerHTML = "Promote to blue card"; 
+	}
 
 	modalCardDelete.onclick = function() {
 		closeLargeCard(card);
 		deleteCard(card); 
 	};
+	modalCardPromote.onclick = function() {
+		console.log("Trying to  convert this card to a blue card."); 
+		// Should also make this the first card on the list.
+		console.log(card); 
+		document.getElementById(card.id).classList.toggle("blueCard");
+		if (document.getElementById(card.id).classList.contains( "blueCard")){
+			modalCardPromote.innerHTML = "Demote to normal card"; 
+		} else {
+			modalCardPromote.innerHTML = "Promote to blue card"; 
+		}
+	};
 	modalCardX.onclick = function() {
 		closeLargeCard(card);
 	};
 	modalCardMessage.innerHTML = card.message;
-	modalCardTags.innerHTML = card.date + " " + card.source + " " + card.url;
+
+	if (card.tags != null){
+		var tagsArray = card.tags.split(',');
+		for (var i = 0; i < tagsArray.length;i++){
+			var tagTag = document.createElement("div");
+			tagTag.innerHTML = tagsArray[i]; 
+			tagTag.className = "tag";
+			modalCardTags.append(tagTag);
+		}
+	}
+	if (card.date != null){
+		var dateTag = document.createElement("div");
+		dateTag.innerHTML = card.date;
+		dateTag.className = "tag";
+		modalCardTags.append(dateTag);
+	}
+	if (card.source != null){
+		var sourceTag = document.createElement("div");
+		sourceTag.innerHTML = card.source;
+		sourceTag.className = "tag";
+		modalCardTags.append(sourceTag);
+	}
+	if (card.url != null){
+		var urlTag = document.createElement("div"); 
+		urlTag.innerHTML = card.url; 
+		urlTag.clasName = "tag"; 
+		modalCardTags.append(urlTag);
+	}
 
 	document.body.append(bg);
 	modalCard.append(modalCardX);
 	modalCard.append(modalCardMessage);
-	modalCardTags.append(modalCardDelete);
+	modalCardActions.append(modalCardPromote);
+	modalCardActions.append(modalCardDelete);
 	modalCard.append(modalCardTags);
+	modalCard.append(modalCardActions);
 	document.body.append(modalCard);
 }
 
@@ -301,7 +363,7 @@ document.addEventListener("keydown", function(event) {
         } else {
             tempID = "bucket" + String(key - 48);
 
-            var whichKey = document.getElementById("shortcut" + String(key-48));
+			var whichKey = document.getElementById("bucketActions" + String(key-48));
             var parent = whichKey.parentNode; 
             whichKey.parentNode.removeChild(whichKey);
             parent.insertBefore(whichKey, parent.firstChild); 
@@ -315,6 +377,11 @@ document.addEventListener("keydown", function(event) {
 function redraw(){
 	var cardsRemaining = generateModel()[0].length - 1; 
 	document.getElementById("shortcut0").innerHTML = String(cardsRemaining);
+	for (var i = 1; i < generateModel().length; i++){
+		var tempBucketID = "cardCount" + String(i);
+		var tempCardsInBucket = generateModel()[i].length - 1;
+		document.getElementById(tempBucketID).innerHTML = tempCardsInBucket + " cards";
+	}
 	if (cardsRemaining <= 0){
 		document.getElementById("bucket0").style.display = "none"; 
 	}

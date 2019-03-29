@@ -16,8 +16,17 @@ function trimMessage(str){
 		"mailto",
 		"Smallpdf wrote", 
 		"YOUR SMALLPDF PRO SUBSCRIPTION",
-		
-
+		"This e-mail is confidential",
+		"This email is confidential", 
+		" | ",
+		"Please consider the environment before printing",
+		"privileged information",
+		"Manuel wrote",
+		"This email and any", 
+		"intended solely for the use",
+		"legally privileged",
+		"is a registered trademark",
+		"not the intended recipient"
 	];
 	for (var i = 0; i < strings.length; i++){
 		newstr = str.split(strings)[0]; 

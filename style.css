@@ -130,6 +130,22 @@ body{
     line-height: 18px;
 }
 
+.blueCard{
+    color: white;
+    background-color: #626dff !important; 
+    text-align: center;
+}
+.pinkCard{
+	color: black; 
+	background-color:#FFABD3 !important; 
+	text-align: center; 
+}
+.greenCard{
+	color: black; 
+	background-color: ##c8ec74 !important;
+	text-align: center; 
+}
+
 .card:nth-child(2){
     background: rgb(255, 255, 196);
     height: 100px; 
@@ -138,13 +154,22 @@ body{
 
 .tags{
 	font-size: 10px; 
-	color: #aaa;
+	color: #ddd;
 	position: absolute; 
 	bottom: 0; 
-	padding-bottom: 6px; 
-	padding-top: 6px; 
+	padding-bottom: 3px; 
+	padding-top: 3px; 
     background: #fff; 
     display: none; 
+}
+
+.tag{
+	padding: 6px;
+	margin: 3px; 
+	background: #ddd;
+	border-radius: 2px;
+	color: black;
+	font-size: 12px; 
 }
 
 #backgroundCover{
@@ -158,8 +183,9 @@ body{
 
 #modalCard{
 	width: 400px; 
-	height: 400px; 
-	background: #fafafa; 
+	height: auto;
+	min-height: 100px;
+	background: #eee; 
 	position: absolute; 
 	top: 50%;
 	left: 50%; 
@@ -168,7 +194,7 @@ body{
 	display: flex; 
 	flex-direction: column; 
 	max-width: 90vw; 
-	max-height: 90vh; 
+	max-height: 70vh; 
 	padding: 12px;
 	border-radius: 2px; 
 }
@@ -214,17 +240,28 @@ body{
 #modalCardMessage{
 	padding: 12px; 
     margin: 12px; 
-    overflow: scroll; 
+	overflow: scroll; 
+	background: white; 
 }
 
 #modalCardTags{
-	padding: 12px; 
-	margin: 12px; 
-	color: #aaa; 
-	position: absolute; 
-	bottom: 0; 
-    background: #fff;
-    width: 350px; 
+	margin-left: 12px;
+	margin-right: 12px;
+	bottom: 36px; 
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	align-content: start; 
+}
+
+.modalCardActions{
+	margin: 12px;
+	margin-top: 6px; 
+	display: flex;
+	flex-wrap: wrap-reverse;
+	justify-content: flex-end;
+	font-size: 12px; 
 }
 
 .bucket{
@@ -239,6 +276,16 @@ body{
 	overflow: scroll; 
 }
 
+.bucketActions{
+	max-width: 180px;
+	color: white;
+	text-align: center; 
+}
+
+.cardCount{
+	font-size: 12px; 
+}
+
 
 #bucket0 .card{
 	height: auto; 
@@ -247,11 +294,16 @@ body{
 
 #modalCardDelete{
 	color: red; 
-	cursor: pointer; 
 }
 
-#modalCardDelete:hover{
-	text-decoration: underline; 
+.modalCardAction{
+	cursor: pointer;
+	padding-left: 12px;
+	color: black;
+}
+
+.modalCardAction:hover{
+	text-decoration: underline;
 }
 
 #modalCardTitle{
