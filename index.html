@@ -143,13 +143,51 @@ function parseWholeFile(file, message, time, source, tags, url){
 }
 
 function addCard(data, message, time, source, tags, url, uniqueid, count){
-	console.log("In add card: ", data[message]); 
+	var extractedTags = "";
+	if (typeof data[tags] === 'string'){
+		extractedTags = data[tags];
+	} else {	
+		for (var i = 0; i < tags.length; i++){
+			var tempTag = data[tags[i]];  
+			tempTag = cleanSmallpdfUrl(tempTag);
+			if (isInterestingTag(tempTag)){
+				extractedTags += tempTag; 
+				extractedTags += ", ";  
+			}
+		}
+		extractedTags = extractedTags.slice(0, -2); // remove last comma
+	}
+	console.log("final list of tags", extractedTags);
+
+	function cleanSmallpdfUrl(str){
+		return str.replace("https://smallpdf.com/",'');
+	}
+	function isInterestingTag(str){
+		if ( str != ""
+		&& str.replace(" ", "") != ""
+		&& str.length < 40
+		&& str.length > 4
+		&& (str.indexOf('@') < 0)
+		&& (str.replace(/\d/g, "").length > 0) // string is not entirely numbers
+		&& str != "other"
+		&& str != "No company"
+		&& str != "Closed"
+		&& str != "general"
+		&& str != "No Group"
+		){
+			return true;
+		} else {
+			return false; 
+		}
+	}
+
+	//console.log("In add card: ", data[message]); 
 		var newcard = new Card(
 		trimMessage(data[message]), //message field
 		data[time], //date
 		source, // source
 		url, // url
-		data[tags],//tag
+		extractedTags, // actual tags, as a comma-separated string
 		String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID //id
 	);
 	return newcard; 

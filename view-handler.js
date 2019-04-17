@@ -200,6 +200,7 @@ function drawSelectionModal(headers, file) {
 	var modalCardTitle = document.createElement("div");
 	var modalCardOptions = document.createElement("div");
 	var modalButton = document.createElement("div");
+	console.log("headers", headers);
 	for (var i = 0; i < headers.length; i++){
 		var option = document.createElement("div");
 		option.id = String(headers[i]);
@@ -223,7 +224,7 @@ function drawSelectionModal(headers, file) {
 		for (var i = 0; i < foundOptions.length; i++){
 			ids.push(foundOptions[i].id); 
 		} 
-		parseWholeFile(file, ids[0], "", "Custom Source", "", "");
+		parseWholeFile(file, ids[0], "", "Custom Source", headers, "");
 		closeLargeCard(modalCard);
 		return ids;
 	});
