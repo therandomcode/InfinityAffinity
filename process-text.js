@@ -2,6 +2,12 @@ function isMinimallyInteresting(str){
 	if (str.split(" ").length < 5){
 		return false; 
 	}
+	if (isUselessPraise(str)){ 
+		return false; 
+	}
+	if (isObscene(str)) { 
+		return false; 
+	}
 	return true;
 }
 
@@ -41,4 +47,84 @@ function deSmallpdf(str){
     var newstr = str.replace('https://smallpdf.com/','');
     newstr.replace('https://support.smallpdf.com/','');
     return newstr; 
+}
+
+
+function isObscene(str){
+	/* If the feedback appears to only contain red flags, 
+	don't show*/
+	var redflags = [
+		"suck my",
+		"porn",
+		"fuck you",
+		"dick",
+		"cunt",
+		"blowjob", 
+		"fuck"
+	]
+	str = str.toLowerCase();
+	str = str.replace(/'/g, ''); //remove punctuation bc users tend to not use
+	str = str.replace ("it is", "its"); 
+	for (var i = 0; i < redflags.length; i++){
+		str = str.replace(redflags[i], '');
+	}
+	if (str.split(" ").length < 5){
+		return true;
+	}
+	return false; 
+}
+
+function isUselessPraise(str){
+	/* If the feedback appears to only contain red flags, 
+	don't show*/
+	var oldstring = str; 
+	var redflags = [
+		"wonderful job",
+		"no nothing",
+		"nothing it",
+		"its perfect", 
+		"its perfect",
+		"i love it",
+		"i like it",
+		"good job",
+		"thank you",
+		"perfect",
+		"smallpdf is awesome",
+		"great work",
+		"literally nothing", 
+		"great tool",
+		"grate",
+		"i like it",
+		"no thank you",
+		"as is",
+		"great",
+		"perfect",
+		"thanks from",
+		"its fine",
+		"should be free",
+		"the way you are",
+		"very good tool",
+		"thanks a lot",
+		"thanks",
+		"nothing",
+		"easy to use",
+		"nothing is missing",
+		"i dont think so",
+		"wonderful tool",
+		"i use it", 
+		"is the best",
+		"love this tool",
+		"thanks so much",
+		"per day"
+	]
+	str = str.toLowerCase();
+	str = str.replace(/'/g, ''); //remove punctuation bc users tend to not use
+	str = str.replace ("it is", "its");
+	for (var i = 0; i < redflags.length; i++){
+		str = str.replace(redflags[i], '');
+	}
+	if (str.split(" ").length < 5){
+		return true;
+	}
+	return false; 
 }

@@ -75,6 +75,9 @@ function parseFile(file){
 	step: function(row) {
 		// First, let's figure out if this is HotJar. We only run this check on the first entry. 	
 		if (count === 0){
+			//
+			
+			
 			console.log("Here is the data we are looking at", row.data[0]);
 			/* If this is a HotJar .CSV */
 			if ('Browser' in row.data[0] 
@@ -85,7 +88,7 @@ function parseFile(file){
 				&& 'Message' in row.data[0])
 				{
 					whichSource = "hj";
-					console.log("This is a hotjar document");
+					//console.log("This is a hotjar document");
 					message = "Message"; 
 					time = "Date Submitted";
 					source = "HotJar"; 
@@ -102,7 +105,7 @@ function parseFile(file){
 				&& 'Description' in row.data[0])
 				{
 					whichSource = "fd";
-					console.log("This is a freshdesk document");
+					//console.log("This is a freshdesk document");
 					message = "Description"; 
 					time = "Created time";
 					source = "FreshDesk"; 
@@ -114,7 +117,7 @@ function parseFile(file){
 				drawSelectionModal(Object.keys(row.data[0]), file); 
 			}
 			count++;
-			console.log(count);  
+			//console.log(count);  
 		}
 	},
 	complete: function() {
@@ -129,7 +132,7 @@ function parseWholeFile(file, message, time, source, tags, url){
 	Papa.parse(file, {
 	header: true,
 	step: function(row) {
-		console.log(row.data[0][message]);
+		//console.log(row.data[0][message]);
 		if (row.data[0][message] != undefined && isMinimallyInteresting(row.data[0][message])){
 				var newcard = addCard(row.data[0], message, time, source, tags, url); 
 				newCardsList.push(newcard);
@@ -157,12 +160,12 @@ function addCard(data, message, time, source, tags, url, uniqueid, count){
 		}
 		extractedTags = extractedTags.slice(0, -2); // remove last comma
 	}
-	console.log("final list of tags", extractedTags);
 
 	function cleanSmallpdfUrl(str){
 		return str.replace("https://smallpdf.com/",'');
 	}
 	function isInterestingTag(str){
+		str = str.replace(/\s+/g,' '); 
 		if ( str != ""
 		&& str.replace(" ", "") != ""
 		&& str.length < 40
