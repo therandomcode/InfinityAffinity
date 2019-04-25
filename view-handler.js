@@ -356,7 +356,8 @@ document.addEventListener("keydown", function(event) {
 	if (!document.getElementById("bucket0").firstChild.nextSibling){
 		return; 
 	}
-    var cardID = document.getElementById("bucket0").firstChild.nextSibling.id;
+	//var cardID = document.getElementById("bucket0").firstChild.nextSibling.id;
+	var cardID = getFirstVisibleCardInBucket("bucket0"); 
 	if (key >= 49 && key <= 58) {
         if (key-48 >= buckets.length){
             drawBucket(buckets.length);
@@ -375,13 +376,35 @@ document.addEventListener("keydown", function(event) {
 	}
 });
 
+function getNumberOfCardsInBucket(bucketID){
+	return document.getElementById(bucketID).getElementsByClassName("card").length;
+}
+
+function getFirstVisibleCardInBucket(bucketID){
+	var bucket = document.getElementById(bucketID); 
+	var cards = bucket.getElementsByClassName("card"); 
+	if (!document.getElementById(bucketID).firstChild.nextSibling){
+		return; 
+	} 
+	for (var i = 0; i < cards.length; i++){
+		if (cards[i].style.display !== "none"){
+			return cards[i].id;
+		}
+	}
+	console.log("There are no visible cards in this bucket"); 
+	return -1; 
+}
+
 function redraw(){
+	console.log("redraw was called"); 
 	var cardsRemaining = generateModel()[0].length - 1; 
-	document.getElementById("shortcut0").innerHTML = String(cardsRemaining);
+	//var cardsRemaining = countVisibleCardsInBucket("bucket0"); // actual # of cards
+	document.getElementById("shortcut0").innerHTML = String(cardsRemaining); // # of hidden cards
 	for (var i = 1; i < generateModel().length; i++){
 		var tempBucketID = "cardCount" + String(i);
 		var tempCardsInBucket = generateModel()[i].length - 1;
-		document.getElementById(tempBucketID).innerHTML = tempCardsInBucket + " cards";
+		//var tempCardInBucket = countVisibleCardsInBucket("bucket"+ (String(i))); // actual # of cards
+		document.getElementById(tempBucketID).innerHTML = tempCardsInBucket + " cards"; // # of hidden cards
 	}
 	if (cardsRemaining <= 0){
 		document.getElementById("bucket0").style.display = "none"; 
@@ -400,4 +423,44 @@ function about(){
 	String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID
 	);
 	drawLargeCard(aboutCard); 
+}
+
+
+function hideCard(cardID){
+	/*Hides a card that has been imported 
+	For example, if user only wants to sort cards with a certain tag */
+	document.getElementById(cardID).style.display = "none";
+}
+
+function hideCardsWithTag(tag){
+	/* Hide all cards with tag, to allow users to filter by tag */
+	var cards = document.getElementsByClassName("card");
+	for (var i = 0; i < cards.length; i++){
+		var cardID = cards[i].id; 
+		var tags = document.getElementById(cardID).getElementsByClassName("tags")[0].innerHTML; 
+		if (!(tags.includes(tag))){
+			hideCard(cardID);
+		}
+	}
+}
+
+function showAllCards(){
+	var cards = document.getElementsByClassName("card");
+	for (var i = 0; i < cards.length; i++){
+		var cardID = cards[i].id; 
+		document.getElementById(cardID).style.display = "";
+	}
+}
+
+function countVisibleCardsInBucket(bucketID){
+	console.log("count visible was called"); 
+	var visibleCardCount = 0; 
+	var cards = document.getElementById(bucketID).getElementsByClassName("card"); 
+	for (var i = 0; i < cards.length; i++){
+		var cardID = cards[i].id;
+		if (document.getElementById(cardID).style.display !== "none"){
+			visibleCardCount++; 
+		}
+	}
+	return visibleCardCount; 
 }

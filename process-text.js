@@ -12,6 +12,8 @@ function isMinimallyInteresting(str){
 }
 
 function trimMessage(str){
+	/* Get rid of annoying email chains, footers, long links, 
+	automated emails and support's responses */
 	var newstr = str;
 	var strings = [ 
 		"Este email puede contener",
@@ -53,6 +55,7 @@ function deSmallpdf(str){
 function isObscene(str){
 	/* If the feedback appears to only contain red flags, 
 	don't show*/
+	var originalstring = str; 
 	var redflags = [
 		"suck my",
 		"porn",
@@ -60,6 +63,7 @@ function isObscene(str){
 		"dick",
 		"cunt",
 		"blowjob", 
+		"motherfucking", 
 		"fuck"
 	]
 	str = str.toLowerCase();
@@ -69,6 +73,9 @@ function isObscene(str){
 		str = str.replace(redflags[i], '');
 	}
 	if (str.split(" ").length < 5){
+		console.log("****************");
+		console.log(oldstring);
+		console.log(str); 
 		return true;
 	}
 	return false; 
@@ -113,9 +120,19 @@ function isUselessPraise(str){
 		"wonderful tool",
 		"i use it", 
 		"is the best",
-		"love this tool",
+		"love",
 		"thanks so much",
-		"per day"
+		"per day",
+		"free limit", 
+		"it didnt work",
+		"really",
+		"very good",
+		"nope",
+		"this tool",
+		"isnt working",
+		"for now",
+		"as it is",
+		"its awesome"
 	]
 	str = str.toLowerCase();
 	str = str.replace(/'/g, ''); //remove punctuation bc users tend to not use
@@ -124,6 +141,9 @@ function isUselessPraise(str){
 		str = str.replace(redflags[i], '');
 	}
 	if (str.split(" ").length < 5){
+		console.log("****************");
+		console.log(oldstring);
+		console.log(str); 
 		return true;
 	}
 	return false; 
