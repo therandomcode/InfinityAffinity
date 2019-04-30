@@ -126,10 +126,14 @@ function drawLargeCard(card) {
 
 	modalCardX.innerHTML = "x";
 	modalCardDelete.innerHTML = "Delete";
-	if (document.getElementById(card.id).classList.contains( "blueCard")){
-		modalCardPromote.innerHTML = "Demote to normal card"; 
-	} else {
-		modalCardPromote.innerHTML = "Promote to blue card"; 
+	console.log(card);
+	console.log(card.id);
+	if (card.id != "cardabout"){
+		if (document.getElementById(card.id).classList.contains( "blueCard")){
+			modalCardPromote.innerHTML = "Demote to normal card"; 
+		} else {
+			modalCardPromote.innerHTML = "Promote to blue card"; 
+		}
 	}
 
 	//modalCardActions.innerHTML = "Add Translation"; 
@@ -316,7 +320,8 @@ function updateBucket(cardID, fromBucketID, targetID) {
 
 function allowDrop(ev) {
     ev.preventDefault();
-	ev.currentTarget.style.backgroundColor = "#ddd";    
+	ev.currentTarget.style.backgroundColor = "#ddd"; 
+	//ev.currentTarget.classList.add("hover-bucket");   
 }
 
 function drag(ev) {
@@ -329,7 +334,8 @@ function dragend(ev) {
 
 function dragleave(ev) {
 	ev.preventDefault();
-	ev.currentTarget.style.backgroundColor = "#eeeeeeaa";
+	ev.currentTarget.style.backgroundColor = "#00000022";
+	//ev.currentTarget.classList.remove("hover-bucket");
 }
 
 function drop(ev) {
@@ -343,7 +349,8 @@ function drop(ev) {
 		updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
 		ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
 	}
-	ev.currentTarget.style.backgroundColor = "#eeeeeeaa";
+	ev.currentTarget.style.backgroundColor = "#00000022";
+	//ev.currentTarget.classList.remove("hover-bucket");
 	redraw(); 
 }
 
@@ -444,7 +451,7 @@ function about(){
 	"", //source
 	"", //url
 	"", //tag
-	String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID
+	"about", // ID is the text "about"
 	);
 	drawLargeCard(aboutCard); 
 }
