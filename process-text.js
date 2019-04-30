@@ -14,7 +14,7 @@ function isMinimallyInteresting(str){
 function trimMessage(str){
 	/* Get rid of annoying email chains, footers, long links, 
 	automated emails and support's responses */
-	var newstr = str;
+	var newstr = str; 
 	var strings = [ 
 		"Este email puede contener",
 		"Hung from Smallpdf",
@@ -39,8 +39,12 @@ function trimMessage(str){
 	for (var i = 0; i < strings.length; i++){
 		newstr = str.split(strings)[0]; 
 		if (newstr.length <= 1 || newstr == str){ 
+			str = removeEmail(str);
+			str = removeURL(str);
 			return str;
 		}
+		newstr = removeEmail(newstr);
+		newstr = removeURL(newstr);
 		return newstr; 
 	}
 }
@@ -153,6 +157,36 @@ function isUselessPraise(str){
 function cleanSmallpdfUrl(str){
 	return str.replace("https://smallpdf.com/",'');
 }
+
+function removeURL(str){
+	/* Removes URLs from string completely. */
+	var words = str.split(" ");
+	var newstr = ""; 
+	for (var i = 0; i < words.length; i++){
+		var word = words[i];
+		if (!(word.includes("http"))){
+			newstr = newstr + " " + word; 
+		}
+	}
+	return newstr.trim(); 
+}
+
+function removeEmail(str){
+	/* Removes the email for privacy reasons. 
+	Replaces with the word '[Email]' so we know they included the info. */ 
+	var words = str.split(" ");
+	var newstr = ""; 
+	for (var i = 0; i < words.length; i++){
+		var word = words[i];
+		if (word.includes("@")){
+			newstr = newstr + " " + "[email]"; 
+		} else {
+			newstr = newstr + " " + word; 
+		}
+	}
+	return newstr.trim(); 
+}
+
 function isInterestingTag(str){
 	str = str.replace(/\s+/g,' '); 
 	if ( str != ""
