@@ -19,8 +19,9 @@ body {
 
 .shortcut{	
     padding: 3px;
-    margin: 0 auto;
-    margin-top: 3px; 
+	margin-top: 3px;
+	margin-right: 3px; 
+	margin-left: 3px;
     width: 24px;
     height: 24px; 
     border-radius: 100%; 
@@ -111,13 +112,13 @@ body{
 }
 
 .card{
-    width: 160px; 
+    width: 176px; 
     height: auto; 
     min-height: 40px; 
 	max-height: 100px;  
 	background: #fff;
 	padding: 10px;
-	margin: 10px; 
+	margin-top: 12px; 
 	display: block; 
 	cursor: pointer; 
 	border-radius: 2px; 
@@ -186,7 +187,7 @@ body{
 	height: auto;
 	min-height: 100px;
 	background: #eee; 
-	position: absolute; 
+	position: fixed; 
 	top: 50%;
 	left: 50%; 
 	margin-left: -200px; 
@@ -269,7 +270,6 @@ body{
 	min-height: 80px;
 	height: 100%; 
     background: #cccccccc; 
-    padding: 3px;
     margin: 6px; 
     border-radius: 2px; 
 	content-align: center; 
@@ -280,6 +280,8 @@ body{
 	max-width: 180px;
 	color: white;
 	text-align: center; 
+	display: flex;
+	align-items: baseline; 
 }
 
 .cardCount{
@@ -304,6 +306,7 @@ body{
 
 .modalCardAction:hover{
 	text-decoration: underline;
+	cursor: pointer; 
 }
 
 #modalCardTitle{
@@ -354,8 +357,8 @@ body{
 	z-index: -1;
 }
 
-#add-more {
-    color: #ffeeee;
+.floating-button{    
+	color: #ffeeee;
 	background-color: pink;
 	background-color: #7F98A3; 
     text-align: center; 
@@ -365,13 +368,17 @@ body{
 	height: 48px; 
 	border-radius: 100%; 
 	font-size: 24px;
-	line-height: 48px; 
-	bottom: 24px;
-	right: 24px; 
-    box-shadow: 0px 2px 16px #00000022;
+	line-height: 48px;     
+	box-shadow: 0px 2px 16px #00000022;
 	cursor: pointer; 
 	visibility: hidden; 
 	z-index: 2; 
+
+}
+
+#add-more {
+	bottom: 24px;
+	right: 24px; 
 }
 
 #add-more:hover {

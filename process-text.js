@@ -132,7 +132,8 @@ function isUselessPraise(str){
 		"isnt working",
 		"for now",
 		"as it is",
-		"its awesome"
+		"its awesome",
+		"thanx"
 	]
 	str = str.toLowerCase();
 	str = str.replace(/'/g, ''); //remove punctuation bc users tend to not use
@@ -147,4 +148,27 @@ function isUselessPraise(str){
 		return true;
 	}
 	return false; 
+}
+
+function cleanSmallpdfUrl(str){
+	return str.replace("https://smallpdf.com/",'');
+}
+function isInterestingTag(str){
+	str = str.replace(/\s+/g,' '); 
+	if ( str != ""
+	&& str.replace(" ", "") != ""
+	&& str.length < 40
+	&& str.length > 4
+	&& (str.indexOf('@') < 0)
+	&& (str.replace(/\d/g, "").length > 0) // string is not entirely numbers
+	&& str != "other"
+	&& str != "No company"
+	&& str != "Closed"
+	&& str != "general"
+	&& str != "No Group"
+	){
+		return true;
+	} else {
+		return false; 
+	}
 }

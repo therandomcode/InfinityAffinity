@@ -6,8 +6,12 @@ function drawSortingScreen(newCards){
     	}
 	}
 	// If we have previously sorted all the cards, add them back 
-	if (!document.getElementById("bucket0")){
-		drawBucket(0);
+
+	for (var i = 0; i < 6; i++){
+		var bucketID = "bucket" + String(i);
+		if (!document.getElementById(bucketID)){
+			drawBucket(i);
+		}
 	}
 
     if (document.getElementsByClassName("bucket").length < 1){
@@ -26,6 +30,7 @@ function drawBucket(bucketNumber) {
 	bucket.className = "bucket";
     bucket.id = "bucket" + String(bucketNumber);
     if (document.getElementById(bucket.id)){
+		console.log("This bucket already exists"); 
         return; 
     }
 	bucket.ondrop = function(event) {
@@ -105,6 +110,7 @@ function drawLargeCard(card) {
 	var modalCardActions = document.createElement("div");
 	var modalCardDelete = document.createElement("div");
 	var modalCardPromote = document.createElement("div");
+	var modalCardAddTranslation = document.createElement("div"); 
 	modalCard.id = "modalCard";
 	modalCardX.id = "x";
 	modalCardMessage.id = "modalCardMessage";
@@ -112,8 +118,10 @@ function drawLargeCard(card) {
 	modalCardActions.className = "modalCardActions";
 	modalCardDelete.id = "modalCardDelete";
 	modalCardPromote.id = "modalCardPromote";
+	modalCardAddTranslation.id = "modalCardAddTranslation"; 
 	modalCardDelete.className = "modalCardAction";
 	modalCardPromote.className = "modalCardAction";
+	modalCardAddTranslation.className = "modalCardAction"; 
 	bg.id = "backgroundCover";
 
 	modalCardX.innerHTML = "x";
@@ -123,6 +131,8 @@ function drawLargeCard(card) {
 	} else {
 		modalCardPromote.innerHTML = "Promote to blue card"; 
 	}
+
+	//modalCardActions.innerHTML = "Add Translation"; 
 
 	modalCardDelete.onclick = function() {
 		closeLargeCard(card);
@@ -142,6 +152,11 @@ function drawLargeCard(card) {
 	modalCardX.onclick = function() {
 		closeLargeCard(card);
 	};
+
+	bg.onclick = function(){
+		console.log("We're tring to close this card modal");
+		closeLargeCard(card);
+	}
 	modalCardMessage.innerHTML = card.message;
 
 	if (card.tags != null){
@@ -175,8 +190,10 @@ function drawLargeCard(card) {
 	document.body.append(bg);
 	modalCard.append(modalCardX);
 	modalCard.append(modalCardMessage);
+	modalCardActions.append(modalCardAddTranslation); 
 	modalCardActions.append(modalCardPromote);
 	modalCardActions.append(modalCardDelete);
+	
 	modalCard.append(modalCardTags);
 	modalCard.append(modalCardActions);
 	document.body.append(modalCard);
@@ -327,7 +344,6 @@ function drop(ev) {
 		ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
 	}
 	ev.currentTarget.style.backgroundColor = "#eeeeeeaa";
-	document.getElementById("shortcut0").innerHTML = String(generateModel()[0].length);
 	redraw(); 
 }
 
@@ -353,7 +369,8 @@ document.addEventListener("keydown", function(event) {
     var buckets = generateModel(); 
     var key = event.keyCode;
 	var tempID = -1; 
-	if (!document.getElementById("bucket0").firstChild.nextSibling){
+	/* If there are no cards in original column, do nothing */
+	if (countVisibleCardsInBucket("bucket0") < 1){
 		return; 
 	}
 	//var cardID = document.getElementById("bucket0").firstChild.nextSibling.id;
@@ -365,9 +382,10 @@ document.addEventListener("keydown", function(event) {
         } else {
             tempID = "bucket" + String(key - 48);
 
+			/* Animates the bucket identifier to show where card was added */
 			var whichKey = document.getElementById("bucketActions" + String(key-48));
-            var parent = whichKey.parentNode; 
-            whichKey.parentNode.removeChild(whichKey);
+			var parent = whichKey.parentNode; 
+			whichKey.parentNode.removeChild(whichKey);
             parent.insertBefore(whichKey, parent.firstChild); 
 
         }
@@ -399,12 +417,18 @@ function redraw(){
 	console.log("redraw was called"); 
 	var cardsRemaining = generateModel()[0].length - 1; 
 	//var cardsRemaining = countVisibleCardsInBucket("bucket0"); // actual # of cards
-	document.getElementById("shortcut0").innerHTML = String(cardsRemaining); // # of hidden cards
-	for (var i = 1; i < generateModel().length; i++){
+	//document.getElementById("shortcut0").innerHTML = String(cardsRemaining); // # of hidden cards
+	for (var i = 0; i < generateModel().length; i++){
 		var tempBucketID = "cardCount" + String(i);
 		var tempCardsInBucket = generateModel()[i].length - 1;
-		//var tempCardInBucket = countVisibleCardsInBucket("bucket"+ (String(i))); // actual # of cards
-		document.getElementById(tempBucketID).innerHTML = tempCardsInBucket + " cards"; // # of hidden cards
+		if (tempCardsInBucket == 0){
+			document.getElementById(tempBucketID).innerHTML = "Drag and drop a card here to add it to this column <br><br> Or press '" + String(i) + "' <br><br>"; // # of hidden cards
+			document.getElementById("bucket"+ String(i)).style.minHeight = "150px";
+		} else if (tempCardsInBucket == 1){
+			document.getElementById(tempBucketID).innerHTML = tempCardsInBucket + " card"; // # of hidden cards
+		} else {
+			document.getElementById(tempBucketID).innerHTML = tempCardsInBucket + " cards"; // # of hidden cards
+		}
 	}
 	if (cardsRemaining <= 0){
 		document.getElementById("bucket0").style.display = "none"; 
@@ -425,11 +449,26 @@ function about(){
 	drawLargeCard(aboutCard); 
 }
 
+function showCard(cardID){
+	document.getElementById(cardID).style.display = "";
+}
 
 function hideCard(cardID){
 	/*Hides a card that has been imported 
 	For example, if user only wants to sort cards with a certain tag */
 	document.getElementById(cardID).style.display = "none";
+}
+
+function showCardsWithTag(tag){
+	/* Hide all cards with tag, to allow users to filter by tag */
+	var cards = document.getElementsByClassName("card");
+	for (var i = 0; i < cards.length; i++){
+		var cardID = cards[i].id; 
+		var tags = document.getElementById(cardID).getElementsByClassName("tags")[0].innerHTML; 
+		if (!(tags.includes(tag))){
+			hideCard(cardID);
+		}
+	}
 }
 
 function hideCardsWithTag(tag){
@@ -439,7 +478,7 @@ function hideCardsWithTag(tag){
 		var cardID = cards[i].id; 
 		var tags = document.getElementById(cardID).getElementsByClassName("tags")[0].innerHTML; 
 		if (!(tags.includes(tag))){
-			hideCard(cardID);
+			showCard(cardID);
 		}
 	}
 }

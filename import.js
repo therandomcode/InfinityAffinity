@@ -2,7 +2,7 @@
 function parseFile(file, unsortedStack, sortedStacks){ 
     console.log("Parse was started"); 
     if (generateModel.length < 1){
-        drawBucket(0); 
+		drawBucket(0); 
     }
 	var count = 0; 
 	var whichSource = "none"; 
