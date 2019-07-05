@@ -31,6 +31,9 @@ function trimMessage(str){
 		"privileged information",
 		"Manuel wrote",
 		"This email and any", 
+		"the information contained", 
+		"this email is confidential", 
+		"the information in this", 
 		"intended solely for the use",
 		"legally privileged",
 		"is a registered trademark",
@@ -127,6 +130,12 @@ function isUselessPraise(str){
 		"love",
 		"thanks so much",
 		"per day",
+		"free limit reached", 
+		"two conversion",
+		"wait", 
+		"2 time", 
+		"more than one", 
+		"of cost",
 		"free limit", 
 		"it didnt work",
 		"really",
@@ -137,7 +146,23 @@ function isUselessPraise(str){
 		"for now",
 		"as it is",
 		"its awesome",
-		"thanx"
+		"thanx", 
+		"es muy bueno",
+		"lo mejor",
+		"super",
+		"util", 
+		"easy", 
+		"rapido",
+		"veloce", 
+		"sehr gutes", 
+		"fácil", "facil", 
+		"gracias", 
+		"mas", "more", "mehr", "very", "très", "tres", "muy", "muito", 
+		"porque", "pratique", 
+		"e", "and", "is", "eh", 
+		"simples", 
+		"bueno",
+		"limit"
 	]
 	str = str.toLowerCase();
 	str = str.replace(/'/g, ''); //remove punctuation bc users tend to not use
@@ -145,7 +170,7 @@ function isUselessPraise(str){
 	for (var i = 0; i < redflags.length; i++){
 		str = str.replace(redflags[i], '');
 	}
-	if (str.split(" ").length < 5){
+	if (str.split(" ").length < 3){
 		console.log("****************");
 		console.log(oldstring);
 		console.log(str); 
@@ -193,7 +218,7 @@ function isInterestingTag(str){
 	&& str.replace(" ", "") != ""
 	&& str.length < 40
 	&& str.length > 4
-	&& (str.indexOf('@') < 0)
+	&& (str.indexOf('@') < 0) // string is not just an email 
 	&& (str.replace(/\d/g, "").length > 0) // string is not entirely numbers
 	&& str != "other"
 	&& str != "No company"
