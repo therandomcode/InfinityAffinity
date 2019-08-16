@@ -89,12 +89,12 @@ function parseFile(file){
 				{
 					whichSource = "hj";
 					//console.log("This is a hotjar document");
-					message = "Message"; 
+					messageHeaders = ["Message"]; 
 					time = "Date Submitted";
 					source = "HotJar"; 
 					tags = ""
 					url = "Source URL"; 
-					parseWholeFile(file, message, time, source, tags, url); 
+					parseWholeFile(file, messageHeaders, time, source, tags, url); 
 				}
 			/* If this is a FreshDesk .CSV */
 			else if (
@@ -106,18 +106,18 @@ function parseFile(file){
 				{
 					whichSource = "fd";
 					//console.log("This is a freshdesk document");
-					message = "Description"; 
+					messageHeaders = ["Description"]; 
 					time = "Created time";
 					source = "FreshDesk"; 
 					tags = "Tags";
 					url = ""; 
-					parseWholeFile(file, message, time, source, tags, url); 
+					parseWholeFile(file, messageHeaders, time, source, tags, url); 
 				}
 			else {
 				drawSelectionModal(Object.keys(row.data[0]), file); 
 			}
 			count++;
-			//console.log(count);  
+			console.log(count);  
 		}
 	},
 	complete: function() {
@@ -127,16 +127,53 @@ function parseFile(file){
 }
 
 
-function parseWholeFile(file, message, time, source, tags, url){ 
+function parseWholeFile(file, messageHeaders, time, source, tagHeaders, url){ 
 	var newCardsList = [];  
 	Papa.parse(file, {
 	header: true,
 	step: function(row) {
-		//console.log(row.data[0][message]);
-		if (row.data[0][message] != undefined && isMinimallyInteresting(row.data[0][message])){
-				var newcard = addCard(row.data[0], message, time, source, tags, url); 
-				newCardsList.push(newcard);
+		/*
+		At the moment we are simply not creating a card if the card is not interesting. 
+		Instead, we should create the card, but it should be hidden. 
+		(There should still be a filter for nonsense typing, though.)
+		In that way, we can adjust the filter afterwards to show more or fewer cards w/o 
+		reuploading. 
+		*/
+		var message = "";
+		var tags = ""; 
+		
+		for (var k = 0; k < messageHeaders.length; k++){
+			var thisHeader = messageHeaders[k];
+			var thisMessage = row.data[0][thisHeader];
+			
+			if (thisMessage!= "" && thisMessage != null){
+				if (message != ""){
+					message = message + ", "; 
+				}
+				var message = message + thisMessage;
+				if (thisHeader != undefined && thisHeader != null && thisHeader != ""){
+					tags = tags + ", " + trimTag(thisHeader);
+				}
 			}
+		}
+
+		for (var i = 0; i < tagHeaders.length; i++){
+			var tempHeader = tagHeaders[i];
+			var tempTag = row.data[0][tempHeader];
+			if (typeof tempTag == "string"){
+				tempTag = cleanSmallpdfUrl(tempTag);
+				if (isInterestingTag(tempTag)){
+					tags = tags + ", " + tempTag.trim();
+				}	
+			}
+		}
+		tags = tags.replace(/(,\s*$)|(^,*)/, ""); //https://stackoverflow.com/questions/17720264/remove-last-comma-from-a-string explains
+		
+		if (isMinimallyInteresting(message)){
+			var newcard = addCard(row.data[0], String(message), time, source, tags, url);
+			newCardsList.push(newcard);
+		}
+		
 	},
 	complete: function() {
 		console.log("All done!");
@@ -146,28 +183,12 @@ function parseWholeFile(file, message, time, source, tags, url){
 }
 
 function addCard(data, message, time, source, tags, url, uniqueid, count){
-	var extractedTags = "";
-	if (typeof data[tags] === 'string'){
-		extractedTags = data[tags];
-	} else {	
-		for (var i = 0; i < tags.length; i++){
-			var tempTag = data[tags[i]];  
-			tempTag = cleanSmallpdfUrl(tempTag);
-			if (isInterestingTag(tempTag)){
-				extractedTags += tempTag; 
-				extractedTags += ", ";  
-			}
-		}
-		extractedTags = extractedTags.slice(0, -2); // remove last comma
-	}
-
-	//console.log("In add card: ", data[message]); 
 		var newcard = new Card(
-		trimMessage(data[message]), //message field
-		data[time], //date
+		trimMessage(message), //message field
+		time, //date
 		source, // source
 		url, // url
-		extractedTags, // actual tags, as a comma-separated string
+		tags, // actual tags, as a comma-separated string
 		String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID
 	);
 	return newcard; 

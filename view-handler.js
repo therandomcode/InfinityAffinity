@@ -20,7 +20,7 @@ function drawSortingScreen(newCards){
 	} 
 	
     for (var i = 0; i < newCards.length; i++){
-        drawCard(newCards[i]); 
+        drawCard(newCards[i], 0); 
 	}
 	document.getElementById("add-more").style.visibility = "visible"; 
 }
@@ -72,7 +72,7 @@ function Card(message, date, source, url, tags, id) {
     this.tags = tags;
 }
 
-function drawCard(card) {
+function drawCard(card, bucketNumber) {
     if (!card){
         console.log("The card does not appear to exist.");
         return -1; 
@@ -94,10 +94,12 @@ function drawCard(card) {
 		dragend(event);
 	};
 	tagsContainer.className = "tags";
-    var str = String(card.tags + card.date + card.url + card.source + "ID: " + card.id); 
-    tagsContainer.innerHTML = str;
+	console.log(card.tags);
+    //var str = String(card.tags + card.date + card.url + card.source + "ID: " + card.id); 
+    tagsContainer.innerHTML = card.tags;
 	physicalCard.append(tagsContainer);
-	document.getElementById("bucket0").append(physicalCard);
+	var whichBucket = "bucket"+ String(bucketNumber);
+	document.getElementById(whichBucket).append(physicalCard);
 	redraw(); 
 }
 
@@ -114,6 +116,7 @@ function drawLargeCard(card) {
 	modalCard.id = "modalCard";
 	modalCardX.id = "x";
 	modalCardMessage.id = "modalCardMessage";
+	modalCardMessage.contentEditable="true";
 	modalCardTags.id = "modalCardTags";
 	modalCardActions.className = "modalCardActions";
 	modalCardDelete.id = "modalCardDelete";
@@ -169,6 +172,15 @@ function drawLargeCard(card) {
 			var tagTag = document.createElement("div");
 			tagTag.innerHTML = tagsArray[i]; 
 			tagTag.className = "tag";
+			var toolColors = ["compress", "convert", "word", "ppt", "excel", "jpg", "merge", "split", "rotate", "edit", "delete", "sign", "unlock", "protect"];
+			for (var c = 0; c < toolColors.length; c++){
+				if (tagTag.innerHTML.includes(toolColors[c])){
+					tagTag.classList.add("color-"+toolColors[c]);
+				} 
+				if (tagTag.innerHTML.toLowerCase().includes("design")){
+					tagTag.classList.remove("color-"+toolColors[c]);	
+				}
+			}
 			modalCardTags.append(tagTag);
 		}
 	}
@@ -203,7 +215,18 @@ function drawLargeCard(card) {
 	document.body.append(modalCard);
 }
 
+function updateCardText(card){
+	if (document.getElementById("modalCardMessage") == null){
+		return; 
+	}
+	var tempText = document.getElementById("modalCardMessage").innerHTML; 
+	card.message = tempText; 
+	document.getElementById(card.id).innerHTML = tempText;
+	return;
+}
+
 function closeLargeCard(card) {
+	updateCardText(card);
 	var myNode = document.getElementById("modalCard");
 	var bg = document.getElementById("backgroundCover");
 	while (myNode.firstChild) {
@@ -245,7 +268,8 @@ function drawSelectionModal(headers, file) {
 		for (var i = 0; i < foundOptions.length; i++){
 			ids.push(foundOptions[i].id); 
 		} 
-		parseWholeFile(file, ids[0], "", "Custom Source", headers, "");
+		console.log("about to call parseWholeFile");
+		parseWholeFile(file, ids, "", "Custom Source", headers, "");
 		closeLargeCard(modalCard);
 		return ids;
 	});
@@ -254,6 +278,7 @@ function drawSelectionModal(headers, file) {
 	modalCardX.innerHTML = "x";
 	modalCardX.onclick = function() {
 		closeLargeCard(modalCard);
+		return null;
 	};
 
 	document.body.append(bg);
@@ -421,7 +446,6 @@ function getFirstVisibleCardInBucket(bucketID){
 }
 
 function redraw(){
-	console.log("redraw was called"); 
 	var cardsRemaining = generateModel()[0].length - 1; 
 	//var cardsRemaining = countVisibleCardsInBucket("bucket0"); // actual # of cards
 	//document.getElementById("shortcut0").innerHTML = String(cardsRemaining); // # of hidden cards

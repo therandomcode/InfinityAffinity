@@ -403,6 +403,60 @@ body{
 }
 
 
+.color-compress{
+	background: #F23030; 
+	color:white;
+}
+.color-convert{
+	background: #FF4C23; 
+	color:white;
+}
+.color-ppt{
+	background: #FF9F19;
+}
+.color-jpg{
+	background: #EBC50C;
+	color: black;
+}
+.color-excel{
+	background: #74D941; 
+}
+.color-edit, color-delete{
+	background: #0FC0C5; 
+}
+.color-word-light{
+	background: #0FC0C5;
+}
+.color-word-dark{
+	background: #0FC0C5; 
+}
+.color-merge{
+	background: #7961F2; 
+	color:white;
+}
+.color-split{
+	background: #9966FF;
+	color:white;
+}
+.color-rotate{
+	background: #B366FF;
+	color:white;
+}
+.color-sign{
+	background: #E667E6;
+	color:white;
+}
+.color-unlock{
+	background: #FF59AC;
+	color:white;
+}
+.color-protect{
+	background: #FF5975;
+	color:white;  
+}
+
+
+
 @keyframes flash {
     0% {
 		background: #ffffff33; 
