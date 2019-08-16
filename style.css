@@ -282,8 +282,22 @@ body{
 	align-items: baseline; 
 }
 
+.bucketActions div:last-child {
+	margin-left: auto;
+  }
+
 .cardCount{
 	font-size: 12px; 
+}
+
+.addNewCard{
+	float: right; 
+	cursor: pointer; 
+	margin: 3px; 
+	padding: 3px;
+}
+.addNewCard:hover{
+	text-decoration: underline; 
 }
 
 #bucket0 .card{

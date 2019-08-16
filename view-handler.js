@@ -46,6 +46,7 @@ function drawBucket(bucketNumber) {
 	var bucketActions = document.createElement("div");
 	var shortcut = document.createElement("div");
 	var cardCount = document.createElement("div"); 
+	var addNewCard = document.createElement("div"); 
 
     shortcut.className = "shortcut";
     shortcut.id = "shortcut"+ String(bucketNumber);
@@ -53,11 +54,21 @@ function drawBucket(bucketNumber) {
 	
 	cardCount.className = "cardCount"; 
 	cardCount.id = "cardCount" + String(bucketNumber);
+
+	addNewCard.className = "addNewCard"; 
+	addNewCard.id = "addNewCard" + String(bucketNumber); 
+	addNewCard.innerHTML = "+▨";
+	addNewCard.onclick = function() {
+	var thiscard = addCard("", "Add a message here", "", "User researcher", "Researcher added");
+	drawCard(thiscard, bucketNumber);
+	};
+
 	
 	bucketActions.className = "bucketActions";
 	bucketActions.id = "bucketActions" + String(bucketNumber);
 	bucketActions.append(shortcut);  
 	bucketActions.append(cardCount);
+	bucketActions.append(addNewCard);
     bucket.append(bucketActions);  
 	document.body.append(bucket);
 }
@@ -99,7 +110,9 @@ function drawCard(card, bucketNumber) {
     tagsContainer.innerHTML = card.tags;
 	physicalCard.append(tagsContainer);
 	var whichBucket = "bucket"+ String(bucketNumber);
-	document.getElementById(whichBucket).append(physicalCard);
+	//document.getElementById(whichBucket).append(physicalCard);
+	var parentBucket = document.getElementById(whichBucket);
+	parentBucket.insertBefore(physicalCard, parentBucket.childNodes[1]);
 	redraw(); 
 }
 
