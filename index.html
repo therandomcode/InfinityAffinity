@@ -4,7 +4,6 @@
 	<!--Let's import all the libraries we need -->
 	<link rel = "stylesheet" type = "text/css" href = "style.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
-	<script type='text/javascript' src="import.js"></script>
 	<script type='text/javascript' src="view-handler.js"></script>
 	<script type='text/javascript' src="process-text.js"></script>
 </head>
@@ -24,8 +23,12 @@
 		<p><a onclick = "about()">About</a></p>
 		<p2>Made with <span style="font-size:12px; font-weight:bold; color:#990000ee;">♥</span> for the people of the internet by <a href = "https://www.kristinawagner.website">Kristina Wagner</a>
 		</p2></div>
-<input type="file" name="file" id="file" class="inputfile"/>
-<label for="file" id = "add-more" class = "floating-button">+</label></input>
+		<div id = "global-actions">
+			<input type="file" name="file" id="file" class="inputfile"/>
+			<label for="file" id = "add-more" class = "floating-button">+</label></input>
+			<div id = "save-to-local" onclick="saveWork()" class = "floating-button">💾</div> 
+			<div id = "start-over" onclick="startOver()" class = "floating-button">⟲</div> 
+		</div> 
 
 <script> 
 
@@ -35,10 +38,33 @@ window.onbeforeunload = function(){
 	}
 };
 
-document.getElementById("upload-file").addEventListener("change", function(){
+var allCards = {}; 
+var model = []; 
+/*If there is a card list in local storage, use that*/
+if (window.localStorage.getItem('cardDict') != null){
+	console.log("We found stuff! Draw! Draw!! Draw!!!");
+	allCards = JSON.parse(window.localStorage.getItem('cardDict'));
+	drawSortingScreen();
+} else {
+	document.getElementById("upload-file").addEventListener("change", function(){
 	console.log("Trying to add a file!"); 
 	init(); 
 });
+}
+/*And then also get the model, and rebuild the affinity from that*/
+
+function startOver(){
+	window.localStorage.clear();
+	location.reload();
+}
+
+function saveWork(){
+	console.log("attempting to save");
+	window.localStorage.setItem('cardDict', JSON.stringify(allCards));
+	window.localStorage.setItem('model', JSON.stringify(generateModel()));
+	// Probably we should do some basic verification that this was successfull first... 
+	document.getElementById("save-to-local").innerHTML = "✔";  
+}
 
 function init(){
     console.log("parseFile started");
@@ -172,6 +198,7 @@ function parseWholeFile(file, messageHeaders, time, source, tagHeaders, url){
 		if (isMinimallyInteresting(message)){
 			var newcard = addCard(row.data[0], String(message), time, source, tags, url);
 			newCardsList.push(newcard);
+			allCards[newcard.id] = newcard; 
 		}
 		
 	},
@@ -191,6 +218,7 @@ function addCard(data, message, time, source, tags, url, uniqueid, count){
 		tags, // actual tags, as a comma-separated string
 		String( Math.floor((Math.random() * 1000000) + 1)), //generate a random ID
 	);
+	allCards[newcard.id] = newcard; 
 	return newcard; 
 }
 

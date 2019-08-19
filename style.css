@@ -269,6 +269,7 @@ body{
     border-radius: 2px; 
 	content-align: center; 
 	overflow: scroll; 
+	display: block;
 }
 
 .hover-bucket{
@@ -369,12 +370,19 @@ body{
 	z-index: -1;
 }
 
+#global-actions{
+	position: fixed;
+	bottom: 48px;
+	right: 48px; 
+	display: flex; 
+	justify-content: flex-end; 
+	min-width: 360px;
+}
+
 .floating-button{    
 	color: #ffeeee;
 	background-color: #7F98A3; 
     text-align: center; 
-    display: inline-block;
-	position: fixed;
 	width: 48px;
 	height: 48px; 
 	border-radius: 100%; 
@@ -384,22 +392,14 @@ body{
 	cursor: pointer; 
 	visibility: hidden; 
 	z-index: 2; 
+	margin-left: 12px;
 
 }
 
-#add-more {
-	bottom: 24px;
-	right: 24px; 
+.floating-button:hover{
+	background-color: rgb(102, 122, 131); 
 }
 
-#save-to-local{
-	bottom: 24px;
-	right: 84px;
-}
-
-#add-more:hover {
-    color: white; 
-}
 
 #submit-file{
 	margin: 12px;
@@ -417,7 +417,6 @@ body{
 }
 
 #submit-file:hover{
-	color: #E67D85;
 	color: #788997;  
 }
 

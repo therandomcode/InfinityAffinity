@@ -1,28 +1,47 @@
 function drawSortingScreen(newCards){
 	if (document.getElementsByClassName("bucket").length === 0){
 		// If we haven't drawn the sorting screen once, do that
-		while (document.body.firstChild && document.body.firstChild.id != "file") {
+		while (document.body.firstChild && document.body.firstChild.id != "global-actions") {
         document.body.removeChild(document.body.firstChild);
     	}
 	}
 	// If we have previously sorted all the cards, add them back 
 
-	for (var i = 0; i < 6; i++){
-		var bucketID = "bucket" + String(i);
-		if (!document.getElementById(bucketID)){
-			drawBucket(i);
+	var numBuckets = 6; //default to 6 buckets drawn on inital screen
+	if (window.localStorage.getItem('cardDict') != null){
+		console.log("we're tring to redraw but we've detected smtn in local storage");
+		allCards = JSON.parse(window.localStorage.getItem('cardDict'));
+		model = JSON.parse(window.localStorage.getItem('model'));
+		numBuckets = model.length;
+		for (var b = 0; b < numBuckets; b++){
+			drawBucket(b);
+			var bucketLength = model[b].length; 
+			for (var c = 0; c < bucketLength; c++){
+				drawCard(allCards[(model[b][bucketLength-c-1])], b); 
+			}
+		}
+	} else {
+		console.log("didn't find anything, must be new! ");
+		for (var i = 0; i < numBuckets; i++){
+			var bucketID = "bucket" + String(i);
+			if (!document.getElementById(bucketID)){
+				drawBucket(i);
+			}
+		}
+		
+		for (var i = 0; i < newCards.length; i++){
+			drawCard(newCards[i], 0); 
 		}
 	}
 
-    if (document.getElementsByClassName("bucket").length < 1){
-        alert("Something went wrong during upload."); 
-        return; 
+	if (document.getElementsByClassName("bucket").length < 1){
+		alert("Something went wrong during upload."); 
+		return; 
 	} 
-	
-    for (var i = 0; i < newCards.length; i++){
-        drawCard(newCards[i], 0); 
-	}
+
 	document.getElementById("add-more").style.visibility = "visible"; 
+	document.getElementById("save-to-local").style.visibility = "visible"; 
+	document.getElementById("start-over").style.visibility = "visible"; 
 }
 
 function drawBucket(bucketNumber) {
@@ -159,9 +178,6 @@ function drawLargeCard(card) {
 		deleteCard(card); 
 	};
 	modalCardPromote.onclick = function() {
-		console.log("Trying to  convert this card to a blue card."); 
-		// Should also make this the first card on the list.
-		console.log(card); 
 		document.getElementById(card.id).classList.toggle("blueCard");
 		if (document.getElementById(card.id).classList.contains( "blueCard")){
 			modalCardPromote.innerHTML = "Demote to normal card"; 
@@ -187,7 +203,7 @@ function drawLargeCard(card) {
 			tagTag.className = "tag";
 			var toolColors = ["compress", "convert", "word", "ppt", "excel", "jpg", "merge", "split", "rotate", "edit", "delete", "sign", "unlock", "protect"];
 			for (var c = 0; c < toolColors.length; c++){
-				if (tagTag.innerHTML.includes(toolColors[c])){
+				if ((tagTag.innerHTML.toLowerCase()).includes(toolColors[c])){
 					tagTag.classList.add("color-"+toolColors[c]);
 				} 
 				if (tagTag.innerHTML.toLowerCase().includes("design")){
@@ -305,12 +321,12 @@ function drawSelectionModal(headers, file) {
 function generateModel(){
 	var model = [[]]; 
 	var buckets = document.getElementsByClassName("bucket"); 
-	for (var i = 0; i < (buckets.length); i++){
-		model[i] = []; 
-		if (buckets[i].hasChildNodes()){
-			var cards = buckets[i].childNodes; 
-			for (var j = 0; j < cards.length; j++){
-				model[i][j] = cards[j].id; 
+	for (var b = 0; b < (buckets.length); b++){
+		model[b] = []; 
+		if (buckets[b].getElementsByClassName("card").length > 0){
+			var morecards = (buckets[b]).getElementsByClassName("card");
+			for (var j = 0; j < morecards.length; j++){
+				model[b][j] = morecards[j].id; 
 			}
 		}
 	}
@@ -459,12 +475,14 @@ function getFirstVisibleCardInBucket(bucketID){
 }
 
 function redraw(){
-	var cardsRemaining = generateModel()[0].length - 1; 
+	document.getElementById("save-to-local").innerHTML = "💾"; 
+	document.getElementById("save-to-local").style.backgroundColor = "";
+	var cardsRemaining = generateModel()[0].length; 
 	//var cardsRemaining = countVisibleCardsInBucket("bucket0"); // actual # of cards
 	//document.getElementById("shortcut0").innerHTML = String(cardsRemaining); // # of hidden cards
 	for (var i = 0; i < generateModel().length; i++){
 		var tempBucketID = "cardCount" + String(i);
-		var tempCardsInBucket = generateModel()[i].length - 1;
+		var tempCardsInBucket = generateModel()[i].length;
 		if (tempCardsInBucket == 0){
 			document.getElementById(tempBucketID).innerHTML = "Drag and drop a card here to add it to this column <br><br> Or press '" + String(i) + "' <br><br>"; // # of hidden cards
 			document.getElementById("bucket"+ String(i)).style.minHeight = "150px";
