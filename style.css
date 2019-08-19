@@ -165,6 +165,7 @@ body{
 	border-radius: 2px;
 	color: black;
 	font-size: 12px; 
+	border: 0px solid transparent;
 }
 
 #backgroundCover{
@@ -370,7 +371,6 @@ body{
 
 .floating-button{    
 	color: #ffeeee;
-	background-color: pink;
 	background-color: #7F98A3; 
     text-align: center; 
     display: inline-block;
@@ -390,6 +390,11 @@ body{
 #add-more {
 	bottom: 24px;
 	right: 24px; 
+}
+
+#save-to-local{
+	bottom: 24px;
+	right: 84px;
 }
 
 #add-more:hover {
@@ -418,55 +423,46 @@ body{
 
 
 .color-compress{
-	background: #F23030; 
-	color:white;
+	border-left: 3px solid #F23030; 
 }
 .color-convert{
-	background: #FF4C23; 
-	color:white;
+	border-left: 3px solid #FF4C23; 
 }
 .color-ppt{
-	background: #FF9F19;
+	border-left: 3px solid #FF9F19;
 }
 .color-jpg{
-	background: #EBC50C;
-	color: black;
+	border-left: 3px solid #EBC50C;
 }
 .color-excel{
-	background: #74D941; 
+	border-left: 3px solid #74D941; 
 }
 .color-edit, color-delete{
-	background: #0FC0C5; 
+	border-left: 3px solid #0FC0C5; 
 }
 .color-word-light{
-	background: #0FC0C5;
+	border-left: 3px solid #0FC0C5;
 }
-.color-word-dark{
-	background: #0FC0C5; 
+.color-word{
+	border-left: 3px solid  #3D99F5; 
 }
 .color-merge{
-	background: #7961F2; 
-	color:white;
+	background: 3px solid #7961F2; 
 }
 .color-split{
-	background: #9966FF;
-	color:white;
+	border-left: 3px solid #9966FF;
 }
 .color-rotate{
-	background: #B366FF;
-	color:white;
+	border-left: 3px solid #B366FF;
 }
 .color-sign{
-	background: #E667E6;
-	color:white;
+	border-left: 3px solid #E667E6;
 }
 .color-unlock{
-	background: #FF59AC;
-	color:white;
+	border-left: 3px solid #FF59AC;
 }
 .color-protect{
-	background: #FF5975;
-	color:white;  
+	border-left: 3px solid  #FF5975;
 }
 
 
