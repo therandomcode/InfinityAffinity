@@ -118,7 +118,7 @@ function parseFile(file){
 					messageHeaders = ["Message"]; 
 					time = "Date Submitted";
 					source = "HotJar"; 
-					tags = ""
+					tags = [""];
 					url = "Source URL"; 
 					parseWholeFile(file, messageHeaders, time, source, tags, url); 
 				}
@@ -131,13 +131,13 @@ function parseFile(file){
 				&& 'Description' in row.data[0])
 				{
 					whichSource = "fd";
-					//console.log("This is a freshdesk document");
+					console.log("This is a freshdesk document");
 					messageHeaders = ["Description"]; 
 					time = "Created time";
 					source = "FreshDesk"; 
-					tags = "Tags";
+					tagHeaders = ["Tags", "Browser", "OS", "Tool", "Created time"];
 					url = ""; 
-					parseWholeFile(file, messageHeaders, time, source, tags, url); 
+					parseWholeFile(file, messageHeaders, time, source, tagHeaders, url); 
 				}
 			else {
 				drawSelectionModal(Object.keys(row.data[0]), file); 
@@ -186,6 +186,7 @@ function parseWholeFile(file, messageHeaders, time, source, tagHeaders, url){
 		for (var i = 0; i < tagHeaders.length; i++){
 			var tempHeader = tagHeaders[i];
 			var tempTag = row.data[0][tempHeader];
+			console.log(tagHeaders, tempHeader, tempTag);
 			if (typeof tempTag == "string"){
 				tempTag = cleanSmallpdfUrl(tempTag);
 				if (isInterestingTag(tempTag)){
@@ -194,7 +195,7 @@ function parseWholeFile(file, messageHeaders, time, source, tagHeaders, url){
 			}
 		}
 		tags = tags.replace(/(,\s*$)|(^,*)/, ""); //https://stackoverflow.com/questions/17720264/remove-last-comma-from-a-string explains
-		
+		console.log("tags",tags);
 		if (isMinimallyInteresting(message)){
 			var newcard = addCard(row.data[0], String(message), time, source, tags, url);
 			newCardsList.push(newcard);
