@@ -106,21 +106,22 @@ body{
 }
 
 .card{
-    width: 176px; 
+	display: flex; 
+	width: calc(100% - 36px); /*-30px is padding (-10) * 2 +12 */
+	max-width: 240px;
     height: auto; 
     min-height: 40px; 
 	max-height: 100px;  
+	padding: 12px;
+	margin-top: 6px; 
+
 	background: #fff;
-	padding: 10px;
-	margin-top: 12px; 
-	display: block; 
-	cursor: pointer; 
-	border-radius: 2px; 
-    text-overflow: hidden;
-    display: block;
-    overflow: hidden;
-	position: relative; 
     box-shadow: 0px 1px 2px #00000011;
+	border-radius: 2px; 
+	cursor: pointer; 
+
+    text-overflow: hidden;
+    overflow: hidden;
     font-size: 14px;
     line-height: 18px;
 }
@@ -144,6 +145,10 @@ body{
 .card:nth-child(2){
     background: rgb(255, 255, 196);
     height: 100px; 
+}
+
+.card:last-child{
+	margin-bottom: 6px;
 }
 
 
@@ -261,15 +266,17 @@ body{
 }
 
 .bucket{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items:center;
     min-width: 196px; 
-	min-height: 80px;
+	min-height: 36px;
 	height: 100%; 
     background: #00000022; 
     margin: 6px; 
-    border-radius: 2px; 
-	content-align: center; 
+    border-radius: 6px; 
 	overflow: scroll; 
-	display: block;
 }
 
 .hover-bucket{
@@ -277,7 +284,9 @@ body{
 }
 
 .bucketActions{
-	max-width: 180px;
+	width: 100%;
+	margin-left: 6px;
+	margin-right: 6px;
 	color: white;
 	text-align: center; 
 	display: flex;
