@@ -47,11 +47,17 @@ function drawSortingScreen(newCards){
 function drawBucket(bucketNumber) {
 	var bucket = document.createElement("div");
 	bucket.className = "bucket";
+	bucket.draggable = "true"; 
     bucket.id = "bucket" + String(bucketNumber);
     if (document.getElementById(bucket.id)){
 		console.log("This bucket already exists"); 
         return; 
-    }
+	}
+	/* For dragging the bucket */
+	bucket.ondragstart = function (event){
+		drag(event);
+	}
+	/* For dragging cards into the bucket */
 	bucket.ondrop = function(event) {
 		drop(event);
 	};
@@ -394,14 +400,29 @@ function dragleave(ev) {
 
 function drop(ev) {
 	ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    buckets = generateModel(); 
-	if (ev.target.className == "bucket") {
-		updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
-		ev.target.appendChild(document.getElementById(data));
-	} else if (ev.target.className == "card") {
-		updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
-		ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
+	var data = ev.dataTransfer.getData("text"); // the ID of the thing we're draggin around
+	console.log("data: ", data);
+	if (document.getElementById(data).classList.contains("bucket")){
+		// Then we're moving a bucket around
+		if (ev.target.className == "bucket"){
+			console.log("bucket into bucket"); 
+			ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
+		} else if (ev.target.className == "card" || ev.target.className == "bucketActions"){
+			console.log("Target is: ", ev.target.parentNode);
+			ev.target.parentNode.parentNode.insertBefore(document.getElementById(data), ev.target.parentNode);
+		} else {
+			console.log("bucket into something not a bucket: ", ev.target);
+		}
+	} else if (document.getElementById(data).classList.contains("card")){
+		//then we're dropping a card 
+		buckets = generateModel(); 
+		if (ev.target.className == "bucket") {
+			updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
+			ev.target.appendChild(document.getElementById(data));
+		} else if (ev.target.className == "card") {
+			updateBucket(data, document.getElementById(data).parentNode.id, ev.target.id);
+			ev.target.parentNode.insertBefore(document.getElementById(data), ev.target);
+		}
 	}
 	ev.currentTarget.style.backgroundColor = "#00000022";
 	//ev.currentTarget.classList.remove("hover-bucket");
