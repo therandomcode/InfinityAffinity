@@ -155,14 +155,15 @@ body{
 
 
 .tags{
-	/*font-size: 10px; 
-	color: #ddd;
-	position: absolute; 
-	bottom: 0; */
 	padding-bottom: 3px; 
 	padding-top: 3px; 
 	color: #777;
 	margin-top: 12px;
+	/* For hiding tags
+	font-size: 10px; 
+	color: #ddd;
+	position: absolute; 
+	bottom: 0; 
     /*display: none; */
 }
 
