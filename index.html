@@ -25,9 +25,9 @@
 		</p2></div>
 		<div id = "global-actions">
 			<input type="file" name="file" id="file" class="inputfile"/>
-			<label for="file" id = "add-more" class = "floating-button">+</label></input>
+			<label for="file" id = "add-more" class = "floating-button">+📄</label></input>
 			<div id = "save-to-local" onclick="saveWork()" class = "floating-button">💾</div> 
-			<div id = "start-over" onclick="startOver()" class = "floating-button">⟲</div> 
+			<div id = "start-over" onclick="startOver()" class = "floating-button">🗑</div> 
 		</div> 
 
 <script> 
@@ -138,6 +138,20 @@ function parseFile(file){
 					tagHeaders = ["Tags", "Browser", "OS", "Tool", "Created time"];
 					url = ""; 
 					parseWholeFile(file, messageHeaders, time, source, tagHeaders, url); 
+				} else if ( 
+				'Name' in row.data[0]
+				&& 'Surface' in row.data[0]
+				&& 'Task' in row.data[0] 
+				&& 'Note ID' in row.data[0])
+				{
+					whichSource = "notion";
+					console.log("This is a Notion document");
+					messageHeaders = ["Name"]; 
+					time = "Date";
+					source = "🧪QualLab"; 
+					tagHeaders = ["Note ID", "Task", "Surface", "Screen"];
+					url = ""; 
+					parseWholeFile(file, messageHeaders, time, source, tagHeaders, url); 
 				}
 			else {
 				drawSelectionModal(Object.keys(row.data[0]), file); 
@@ -190,12 +204,10 @@ function parseWholeFile(file, messageHeaders, time, source, tagHeaders, url){
 				tempTag = cleanSmallpdfUrl(tempTag);
 				if (isInterestingTag(tempTag)){
 					tags = tags + ", " + tempTag.trim();
-					console.log("tags here now ", tags);
 				}
 			}
 		}
 		tags = tags.replace(/(,\s*$)|(^,*)/, ""); //https://stackoverflow.com/questions/17720264/remove-last-comma-from-a-string explains
-		console.log("tags",tags);
 		if (isMinimallyInteresting(message)){
 			var newcard = addCard(row.data[0], String(message), time, source, tags, url);
 			newCardsList.push(newcard);

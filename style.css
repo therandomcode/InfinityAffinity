@@ -1,6 +1,15 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
 
-html
+
+
+:root {
+	--grey-200: #222;
+	--gray-800: #888888; 
+	--primary-color: #7F98A3; 
+	--primary-darkened: rgb(76, 95, 104);
+  }html
+
+
 body {
 	background: #56CCF2;  /* fallback for old browsers */
 	font-family: Source Sans Pro;
@@ -398,7 +407,7 @@ body{
 
 .floating-button{    
 	color: #ffeeee;
-	background-color: #7F98A3; 
+	background-color: var(--primary-color); 
     text-align: center; 
 	width: 48px;
 	height: 48px; 
@@ -414,7 +423,7 @@ body{
 }
 
 .floating-button:hover{
-	background-color: rgb(102, 122, 131); 
+	background-color: var(--primary-darkened); 
 }
 
 
@@ -424,8 +433,7 @@ body{
 	padding: 12px;
 	width: 100%;
 	border-radius: 30px; 
-	color: #D66D75; 
-	color: #7F98A3; 
+	color: var(--primary-color); 
 	cursor: pointer; 
 	background: white; 
 	padding-left: 30px;
@@ -514,6 +522,10 @@ body{
 	.bucket{
 		width: 500px;
 		min-width: 260px;
+	}
+
+	.bucketActions{
+		visibility: hidden;
 	}
 
 	.tags{
