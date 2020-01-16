@@ -107,6 +107,7 @@ body{
 
 .card{
 	display: flex; 
+	flex-direction: column;
 	width: calc(100% - 36px); /*-30px is padding (-10) * 2 +12 */
 	max-width: 240px;
     height: auto; 
@@ -123,7 +124,8 @@ body{
     text-overflow: hidden;
     overflow: hidden;
     font-size: 14px;
-    line-height: 18px;
+	line-height: 18px;
+	word-break: break-word;
 }
 
 .blueCard{
@@ -138,13 +140,13 @@ body{
 }
 .greenCard{
 	color: black; 
-	background-color: ##c8ec74 !important;
+	background-color: #c8ec74 !important;
 	text-align: center; 
 }
 
 .card:nth-child(2){
     background: rgb(255, 255, 196);
-    height: 100px; 
+    /*height: 100px; */
 }
 
 .card:last-child{
@@ -153,14 +155,19 @@ body{
 
 
 .tags{
-	font-size: 10px; 
+	/*font-size: 10px; 
 	color: #ddd;
 	position: absolute; 
-	bottom: 0; 
+	bottom: 0; */
 	padding-bottom: 3px; 
 	padding-top: 3px; 
-    background: #fff; 
-    display: none; 
+	color: #777;
+	margin-top: 12px;
+    /*display: none; */
+}
+
+.tags:hover{
+	color: black; 
 }
 
 .tag{
@@ -488,3 +495,33 @@ body{
 		background: transparent; 
     }
 }
+
+@media print {
+
+	body {
+	  margin: 0;
+	  color: #000;
+	  background-color: #fff;
+
+	}
+
+	.card{
+		max-height: none !important;
+		min-height: none !important;
+	}
+
+	.bucket{
+		width: 500px;
+		min-width: 260px;
+	}
+
+	.tags{
+		font-weight: bold;
+		margin-top: 12px;
+	}
+
+	.floating-button{
+		display: none;
+	}
+  
+  }

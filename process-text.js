@@ -274,6 +274,7 @@ function runTests(){
 	var message8 = "fuck this software, but I also have some useful-ish feedback. There is something wrong in part 3. I wasted a ton of time on this. Fuck you again.";
 	var message9 = "Here is something else: [www.somethingoranother.com.br/somethingelse.jpg]";
 	var message10 = "there was something or another in a message, from john doe, assistant to jane doe [www.weufhwohfweiufh.co.in address1, address2 line, some town, USA. 089-1232-4112]";
+	var message11 = "the resultant word file is just a blank page https://support.smallpdf.com/files/55fee1b4a8223d9t934tyc54c9571e?name=flame3%20poergsdfh-converted.docx"
 
 	console.log("Testing isUselessPraise()..."); 
 	if (isUselessPraise(message2) == false){
@@ -295,6 +296,10 @@ function runTests(){
 	console.log("Testing removeURL()...");
 	if (removeURL(message5) != "Hi, I use ilovepdf My email is bob@dylan.com. I don't like marshmellows."){
 		console.log("⚠ TEST FAILED on message5");
+	}
+	if (removeURL(message11) != "the resultant word file is just a blank page"){
+		console.log("⚠ TEST FAILED on message11");
+		console.log(removeURL(message11));
 	}
 	if (removeURL(message9) != "Here is something else:"){
 		console.log("⚠ TEST FAILED on message9"); 

@@ -54,7 +54,7 @@ function drawBucket(bucketNumber) {
         return; 
 	}
 	/* For dragging the bucket */
-	bucket.ondragstart = function (event){
+	bucket.ondragstart = function(event){
 		drag(event);
 	}
 	/* For dragging cards into the bucket */
@@ -130,12 +130,12 @@ function drawCard(card, bucketNumber) {
 		dragend(event);
 	};
 	tagsContainer.className = "tags";
+	console.log("card tags");
 	console.log(card.tags);
-    //var str = String(card.tags + card.date + card.url + card.source + "ID: " + card.id); 
-    tagsContainer.innerHTML = card.tags;
+	tagsContainer.innerHTML = card.tags;
 	physicalCard.append(tagsContainer);
+	console.log(physicalCard);
 	var whichBucket = "bucket"+ String(bucketNumber);
-	//document.getElementById(whichBucket).append(physicalCard);
 	var parentBucket = document.getElementById(whichBucket);
 	parentBucket.insertBefore(physicalCard, parentBucket.childNodes[1]);
 	redraw(); 
@@ -203,7 +203,8 @@ function drawLargeCard(card) {
 
 	if (card.tags != null){
 		var tagsArray = card.tags.split(',');
-		for (var i = 0; i < tagsArray.length;i++){
+		for (var i = 0; i < tagsArray.length; i++){
+			console.log("individual tag", tagsArray.length); 
 			var tagTag = document.createElement("div");
 			tagTag.innerHTML = tagsArray[i]; 
 			tagTag.className = "tag";
@@ -219,22 +220,22 @@ function drawLargeCard(card) {
 			modalCardTags.append(tagTag);
 		}
 	}
-	if (card.date != null){
+	if (card.date != null && isInterestingTag(card.date)){
 		var dateTag = document.createElement("div");
 		dateTag.innerHTML = card.date;
 		dateTag.className = "tag";
 		modalCardTags.append(dateTag);
 	}
-	if (card.source != null){
+	if (card.source != null && isInterestingTag(card.source)){
 		var sourceTag = document.createElement("div");
 		sourceTag.innerHTML = card.source;
 		sourceTag.className = "tag";
 		modalCardTags.append(sourceTag);
 	}
-	if (card.url != null){
+	if (card.url != null && isInterestingTag(card.url)){
 		var urlTag = document.createElement("div"); 
 		urlTag.innerHTML = card.url; 
-		urlTag.clasName = "tag"; 
+		urlTag.className = "tag"; 
 		modalCardTags.append(urlTag);
 	}
 
@@ -279,7 +280,7 @@ function drawSelectionModal(headers, file) {
 	var modalCardTitle = document.createElement("div");
 	var modalCardOptions = document.createElement("div");
 	var modalButton = document.createElement("div");
-	console.log("headers", headers);
+	//console.log("headers", headers);
 	for (var i = 0; i < headers.length; i++){
 		var option = document.createElement("div");
 		option.id = String(headers[i]);
@@ -287,7 +288,7 @@ function drawSelectionModal(headers, file) {
 		option.innerHTML = String(option.id); 
 		modalCardOptions.append(option); 
 		option.addEventListener("click", function(ev, file){
-			console.log("The selected option is: ", event.target.id); 
+			//console.log("The selected option is: ", event.target.id); 
 			document.getElementById(event.target.id).classList.toggle("selectedOption");
 		});
 	}
@@ -304,7 +305,8 @@ function drawSelectionModal(headers, file) {
 			ids.push(foundOptions[i].id); 
 		} 
 		console.log("about to call parseWholeFile");
-		parseWholeFile(file, ids, "", "Custom Source", headers, "");
+		parseWholeFile(file, ids, "", "", headers, "");
+		//parseWholeFile(file, ids, "", "Custom Source", headers, "");
 		closeLargeCard(modalCard);
 		return ids;
 	});

@@ -178,20 +178,20 @@ function parseWholeFile(file, messageHeaders, time, source, tagHeaders, url){
 				}
 				var message = message + thisMessage;
 				if (thisHeader != undefined && thisHeader != null && thisHeader != ""){
-					tags = tags + ", " + trimTag(thisHeader);
+					//tags = tags + ", " + trimTag(thisHeader);
 				}
 			}
 		}
-
+// This actually ads interesting tags (below) 
 		for (var i = 0; i < tagHeaders.length; i++){
 			var tempHeader = tagHeaders[i];
 			var tempTag = row.data[0][tempHeader];
-			console.log(tagHeaders, tempHeader, tempTag);
 			if (typeof tempTag == "string"){
 				tempTag = cleanSmallpdfUrl(tempTag);
 				if (isInterestingTag(tempTag)){
 					tags = tags + ", " + tempTag.trim();
-				}	
+					console.log("tags here now ", tags);
+				}
 			}
 		}
 		tags = tags.replace(/(,\s*$)|(^,*)/, ""); //https://stackoverflow.com/questions/17720264/remove-last-comma-from-a-string explains
