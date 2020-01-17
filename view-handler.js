@@ -116,10 +116,11 @@ function drawCard(card, bucketNumber) {
 	// this will make the card a little more "real"
 	var physicalCard = document.createElement("div");
 	var tagsContainer = document.createElement("div");
+	var cardText = document.createElement("div"); 
 	physicalCard.draggable = "true";
 	physicalCard.id = card.id;
 	physicalCard.className = "card";
-	physicalCard.innerHTML = card.message;
+	cardText.innerHTML = card.message;
 	physicalCard.onclick = function(event) {
 		drawLargeCard(card);
 	};
@@ -129,12 +130,11 @@ function drawCard(card, bucketNumber) {
 	physicalCard.ondragend = function(event) {
 		dragend(event);
 	};
+	cardText.className = "cardText"; 
 	tagsContainer.className = "tags";
-	console.log("card tags");
-	console.log(card.tags);
 	tagsContainer.innerHTML = card.tags;
+	physicalCard.append(cardText);
 	physicalCard.append(tagsContainer);
-	console.log(physicalCard);
 	var whichBucket = "bucket"+ String(bucketNumber);
 	var parentBucket = document.getElementById(whichBucket);
 	parentBucket.insertBefore(physicalCard, parentBucket.childNodes[1]);
@@ -256,8 +256,8 @@ function updateCardText(card){
 		return; 
 	}
 	var tempText = document.getElementById("modalCardMessage").innerHTML; 
-	card.message = tempText; 
-	document.getElementById(card.id).innerHTML = tempText;
+	card.message = tempText;
+	document.getElementById(card.id).getElementsByClassName("cardText")[0].innerHTML = tempText;
 	return;
 }
 
@@ -403,7 +403,7 @@ function dragleave(ev) {
 function drop(ev) {
 	ev.preventDefault();
 	var data = ev.dataTransfer.getData("text"); // the ID of the thing we're draggin around
-	console.log("data: ", data);
+	//console.log("data: ", data);
 	if (document.getElementById(data).classList.contains("bucket")){
 		// Then we're moving a bucket around
 		if (ev.target.className == "bucket"){

@@ -119,9 +119,6 @@ body{
 	flex-direction: column;
 	width: calc(100% - 36px); /*-30px is padding (-10) * 2 +12 */
 	max-width: 240px;
-    height: auto; 
-    min-height: 40px; 
-	max-height: 100px;  
 	padding: 12px;
 	margin-top: 6px; 
 
@@ -130,11 +127,17 @@ body{
 	border-radius: 2px; 
 	cursor: pointer; 
 
-    text-overflow: hidden;
-    overflow: hidden;
     font-size: 14px;
 	line-height: 18px;
 	word-break: break-word;
+}
+
+.cardText{
+	max-height: 100px; 
+	height: auto;
+	min-height: 20px; 
+    text-overflow: hidden;
+    overflow: hidden;
 }
 
 .blueCard{
