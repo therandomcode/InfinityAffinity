@@ -24,6 +24,7 @@
 		<p2>Made with <span style="font-size:12px; font-weight:bold; color:#990000ee;">♥</span> for the people of the internet by <a href = "https://www.kristinawagner.website">Kristina Wagner</a>
 		</p2></div>
 		<div id = "global-actions">
+			<div id = "toggle-tags" onclick="toggleTags()" class = "floating-button">🐵</div> 
 			<input type="file" name="file" id="file" class="inputfile"/>
 			<label for="file" id = "add-more" class = "floating-button">+📄</label></input>
 			<div id = "save-to-local" onclick="saveWork()" class = "floating-button">💾</div> 
@@ -56,6 +57,21 @@ if (window.localStorage.getItem('cardDict') != null){
 function startOver(){
 	window.localStorage.clear();
 	location.reload();
+}
+
+function toggleTags(){
+	var tagstohide = document.getElementsByClassName("tags");
+	for (var i = 0; i < tagstohide.length; i++){
+			if (tagstohide[i].style.display === ('none')){
+				tagstohide[i].style.display = 'block';
+				document.getElementById("toggle-tags").innerHTML = "🐵"; 
+			} else {
+				tagstohide[i].style.display = 'none';
+				document.getElementById("toggle-tags").innerHTML = "🙈"; 
+			}
+	}
+
+	
 }
 
 function saveWork(){

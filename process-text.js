@@ -3,7 +3,7 @@ function isMinimallyInteresting(str){
 		console.log("isMinimallyInteresting says something went wrong! str does not exist.");
 		return;
 	}
-	if (str.split(" ").length < 9){
+	if (str.split(" ").length < 1){
 		return false; 
 	}
 	if (str.includes("bitbounce")){

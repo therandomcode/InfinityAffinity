@@ -39,6 +39,7 @@ function drawSortingScreen(newCards){
 		return; 
 	} 
 
+	document.getElementById("toggle-tags").style.visibility = "visible";
 	document.getElementById("add-more").style.visibility = "visible"; 
 	document.getElementById("save-to-local").style.visibility = "visible"; 
 	document.getElementById("start-over").style.visibility = "visible"; 
@@ -552,6 +553,30 @@ function showCardsWithTag(tag){
 		var tags = document.getElementById(cardID).getElementsByClassName("tags")[0].innerHTML; 
 		if (!(tags.includes(tag))){
 			hideCard(cardID);
+		}
+	}
+}
+
+function showCardsWithThisTagToo(tag){
+	var cards = document.getElementsByClassName("card");
+	for (var i = 0; i < cards.length; i++){
+		var cardID = cards[i].id; 
+		var tags = document.getElementById(cardID).getElementsByClassName("tags")[0].innerHTML; 
+		if (tags.includes(tag)){
+			showCard(cardID);
+		}
+	}
+}
+
+function showCardsWithTags([targetTags]){
+	/* Hide all cards with tag, to allow users to filter by tag */
+	showCardsWithTag(targetTags[0]);
+	var cards = document.getElementsByClassName("card");
+	for (var i = 0; i < cards.length; i++){
+		var cardID = cards[i].id; 
+		var tags = document.getElementById(cardID).getElementsByClassName("tags")[0].innerHTML; 
+		if (tags.includes(targetTags[i])){
+			showCard(cardID);
 		}
 	}
 }

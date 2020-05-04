@@ -5,16 +5,19 @@
 :root {
 	--grey-200: #222;
 	--gray-800: #888888; 
-	--primary-color: #7F98A3; 
-	--primary-darkened: rgb(76, 95, 104);
+	--primary-color: #7F98A3;
+	--primary-color: #c2d7da;
+	--primary-color-variant: #99bdc1; 
+	--primary-darkened: #015d67;
   }html
 
 
 body {
 	background: #56CCF2;  /* fallback for old browsers */
 	font-family: Source Sans Pro;
-	background-color: #0D2027;
-	background-image: url('https://images.pexels.com/photos/6923/mountains-fog-green-beauty.jpg?'); 
+	/*background-image: url('https://images.pexels.com/photos/6923/mountains-fog-green-beauty.jpg?'); */
+	background: rgb(194,215,218);
+	/*background: linear-gradient(90deg, #7F98A3 0%, #c2d7da 100%);*/
 	background-size: 100%; 
 	background-repeat: no-repeat;
 	margin-top: 0px; 
@@ -99,7 +102,7 @@ a:hover{
 }
 
 
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+@import ('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 head{
 	height: 0;
 	width: 0;
@@ -130,6 +133,14 @@ body{
     font-size: 14px;
 	line-height: 18px;
 	word-break: break-word;
+}
+
+.card:drop{
+	background: red;
+}
+
+.bucket:drop{
+	background:purple;
 }
 
 .cardText{
@@ -171,6 +182,7 @@ body{
 	padding-top: 3px; 
 	color: #777;
 	margin-top: 12px;
+	display: block;
 	/* For hiding tags
 	font-size: 10px; 
 	color: #ddd;
@@ -290,6 +302,7 @@ body{
 	flex-direction: column;
 	justify-content: center;
 	align-items:center;
+	width: 330px; /*Setting a default, maybe change this later*/
     min-width: 196px; 
 	min-height: 36px;
 	height: 100%; 
@@ -330,10 +343,43 @@ body{
 .addNewCard:hover{
 	text-decoration: underline; 
 }
+#bucket0{
 
+	display: block; 
+	position: fixed;
+	left: 0;
+	background: rgb(194,215,218);
+	background: linear-gradient(45deg, #d5e4e6 0%, #7F98A3 100%);
+	width: 260px;
+	border-radius: 0;
+	top: 0;
+	margin: 0;
+	padding: 24px;
+	height: 100vh;
+	box-shadow: 0px 4px 16px #00000066;
+	align-items: center;
+	color: black;
+	padding-top: 0;
+
+}
 #bucket0 .card{
 	height: auto; 
 	max-height: 280px;
+	opacity: 60%;
+}
+
+#bucket0 .card:hover{
+opacity: 1;
+}
+
+#bucket0 .card:nth-child(2){
+	opacity: 1;
+}
+
+
+
+#bucket1{
+	margin-left: 354px;
 }
 
 #modalCardDelete{
@@ -376,6 +422,8 @@ body{
 .selectedOption{
 	background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Check_mark_23x20_04.svg/1178px-Check_mark_23x20_04.svg.png);
 	background-image: url(http://pluspng.com/img-png/tick-box-png-checked-checkbox-icon-png-50-px-1600.png);
+	
+	background-color: rgb(127, 201, 218);
 	background-size: 12px; 
 	background-position: right; 
 	background-repeat: no-repeat;
@@ -401,11 +449,14 @@ body{
 
 #global-actions{
 	position: fixed;
-	bottom: 48px;
+	bottom: 36px;
 	right: 48px; 
 	display: flex; 
 	justify-content: flex-end; 
-	min-width: 360px;
+	background: var(--primary-darkened);
+	border-radius: 36px;	
+	box-shadow: 0px 4px 16px #00000066;
+	padding: 12px;
 }
 
 .floating-button{    
@@ -421,7 +472,8 @@ body{
 	cursor: pointer; 
 	visibility: hidden; 
 	z-index: 2; 
-	margin-left: 12px;
+	margin-left: 6px;
+	margin-right: 6px;
 
 }
 
@@ -514,7 +566,9 @@ body{
 	  margin: 0;
 	  color: #000;
 	  background-color: #fff;
-
+	  max-width: calc(210mm - 10mm); /*Roughly an A4 page minus margins*/
+	  display: flex;
+	  flex-wrap: wrap;
 	}
 
 	.card{
@@ -522,9 +576,16 @@ body{
 		min-height: none !important;
 	}
 
+	.cardText{
+		max-height: none !important;
+		min-height: none !important;
+	}
+
 	.bucket{
-		width: 500px;
-		min-width: 260px;
+		width: 50mm;
+		min-width: 40mm;
+		padding: 0;
+		margin: 0;
 	}
 
 	.bucketActions{
@@ -534,6 +595,7 @@ body{
 	.tags{
 		font-weight: bold;
 		margin-top: 12px;
+		display: none;
 	}
 
 	.floating-button{
